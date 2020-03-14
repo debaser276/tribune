@@ -24,6 +24,7 @@ dependencies {
     implementation "org.kodein.di:kodein-di-framework-ktor-server-jvm:6.3.3"
     implementation "io.ktor:ktor-auth:1.2.4"
     implementation "io.ktor:ktor-auth-jwt:1.2.4"
+    implementation "org.springframework.security:spring-security-crypto:5.1.6.RELEASE"
 }
 
 compileKotlin {

@@ -39,3 +39,6 @@ out/
 *.zip
 *.tar.gz
 *.rar
+
+secrets/
+
