@@ -2,7 +2,7 @@ package ru.debaser.projects.tribune.service
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ru.debaser.projects.tribune.UserRepository
+import ru.debaser.projects.tribune.repository.UserRepository
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.AuthenticationResponseDto
 import ru.debaser.projects.tribune.model.UserModel

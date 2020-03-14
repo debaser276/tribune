@@ -1,4 +1,4 @@
-package ru.debaser.projects.tribune
+package ru.debaser.projects.tribune.repository
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
