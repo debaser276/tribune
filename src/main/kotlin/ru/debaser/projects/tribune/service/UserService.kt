@@ -13,6 +13,8 @@ class UserService (
 ) {
     private val mutex = Mutex()
 
+    suspend fun getByUsername(username: String) = repo.getByUsername(username)
+
     suspend fun register(input: AuthenticationRequestDto): AuthenticationResponseDto {
         mutex.withLock {
             val user = repo.add(UserModel(username = input.username, password = input.password))
