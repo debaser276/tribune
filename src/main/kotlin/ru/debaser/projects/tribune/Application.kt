@@ -13,7 +13,7 @@ import org.kodein.di.ktor.KodeinFeature
 import org.kodein.di.ktor.kodein
 import ru.debaser.projects.tribune.kodein.KodeinBuilder
 import ru.debaser.projects.tribune.route.RoutingV1
-import ru.debaser.projects.tribune.statuspages.setExceptions
+import ru.debaser.projects.tribune.statuspages.ErrorHandler
 
 fun main(args : Array<String>) {
     EngineMain.main(args)
@@ -27,7 +27,7 @@ fun Application.module() {
         }
     }
     install(StatusPages) {
-        setExceptions()
+        ErrorHandler().setup(this)
     }
     install(KodeinFeature) {
         KodeinBuilder(environment).setup(this)

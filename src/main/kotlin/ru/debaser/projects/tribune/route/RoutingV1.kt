@@ -6,7 +6,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.post
 import io.ktor.routing.route
-import ru.debaser.projects.tribune.Exceptions.LoginAlreadyExistsException
+import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.service.UserService
 
