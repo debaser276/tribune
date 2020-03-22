@@ -11,7 +11,7 @@ import io.ktor.server.cio.EngineMain
 import org.kodein.di.generic.instance
 import org.kodein.di.ktor.KodeinFeature
 import org.kodein.di.ktor.kodein
-import ru.debaser.projects.tribune.kodein.binds
+import ru.debaser.projects.tribune.kodein.KodeinBuilder
 import ru.debaser.projects.tribune.route.RoutingV1
 import ru.debaser.projects.tribune.statuspages.setExceptions
 
@@ -30,7 +30,7 @@ fun Application.module() {
         setExceptions()
     }
     install(KodeinFeature) {
-        binds(this@module)
+        KodeinBuilder(environment).setup(this)
     }
     install(Authentication) {
 
