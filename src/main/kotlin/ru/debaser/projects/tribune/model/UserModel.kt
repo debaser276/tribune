@@ -4,8 +4,8 @@ data class UserModel(
     val id: Long = 1L,
     val username: String,
     val password: String,
-    val likedCount: Int = 0,
-    val notLikedCount: Int = 0,
+    val likes: Int = 0,
+    val notLikes: Int = 0,
     val isHater: Boolean = false,
     val isPromoter: Boolean = false
 )
