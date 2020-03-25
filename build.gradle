@@ -26,6 +26,8 @@ dependencies {
     implementation "io.ktor:ktor-auth-jwt:1.2.4"
     implementation "org.springframework.security:spring-security-crypto:5.1.6.RELEASE"
     implementation "org.postgresql:postgresql:42.2.2"
+    implementation "com.zaxxer:HikariCP:2.7.8"
+    implementation "org.jetbrains.exposed:exposed:0.12.1"
 }
 
 compileKotlin {
