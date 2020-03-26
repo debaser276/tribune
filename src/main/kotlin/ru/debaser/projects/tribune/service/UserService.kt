@@ -5,6 +5,7 @@ import kotlinx.coroutines.sync.withLock
 import ru.debaser.projects.tribune.repository.UserRepository
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.AuthenticationResponseDto
+import ru.debaser.projects.tribune.exception.DatabaseException
 import ru.debaser.projects.tribune.model.UserModel
 
 class UserService (
@@ -13,13 +14,15 @@ class UserService (
 ) {
     private val mutex = Mutex()
 
-    suspend fun getByUsername(username: String) = repo.getByUsername(username)
+    suspend fun getByUsername(username: String): UserModel? = repo.getByUsername(username)
 
     suspend fun register(input: AuthenticationRequestDto): AuthenticationResponseDto {
         mutex.withLock {
-            val user = repo.add(UserModel(username = input.username, password = input.password))
-            val token = tokenService.generate(user.id)
-            return AuthenticationResponseDto(user.id, token)
+            val id = repo.save(UserModel(
+                username = input.username,
+                password = input.password)) ?: throw DatabaseException()
+            val token = tokenService.generate(id)
+            return AuthenticationResponseDto(id, token)
         }
     }
 }

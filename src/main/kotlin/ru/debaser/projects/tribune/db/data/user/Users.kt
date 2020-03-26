@@ -8,7 +8,7 @@ object Users : Table() {
     val username: Column<String> = varchar("username", 100)
     val password: Column<String> = varchar("password", 100)
     val likes: Column<Int> = integer("likes")
-    val notLikes: Column<Int> = integer("notLikes")
-    val isHAter: Column<Boolean> = bool("isHater")
-    val isPromoter: Column<Boolean> = bool("isPromoter")
+    val notLikes: Column<Int> = integer("not_likes")
+    val isHater: Column<Boolean> = bool("is_hater")
+    val isPromoter: Column<Boolean> = bool("is_promoter")
 }

@@ -1,45 +1,38 @@
 package ru.debaser.projects.tribune.repository
 
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import ru.debaser.projects.tribune.dto.AuthenticationResponseDto
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import ru.debaser.projects.tribune.db.data.user.Users
+import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.model.UserModel
 
 interface UserRepository {
+    suspend fun save(user: UserModel): Long?
     suspend fun getByUsername(username: String): UserModel?
-    suspend fun add(user: UserModel): UserModel
-    suspend fun save(user: UserModel): UserModel
 }
 
 class UserRepositoryInMemoryWithMutex: UserRepository {
-    private var nextId = 1L
-    private val users = mutableListOf<UserModel>()
-    private val mutex = Mutex()
 
-    override suspend fun getByUsername(username: String): UserModel? =
-        users.find { it.username == username }
-
-    override suspend fun add(user: UserModel): UserModel {
-        mutex.withLock {
-            val copy = user.copy(id = nextId++)
-            users.add(copy)
-            return copy
-        }
+    override suspend fun save(item: UserModel): Long? = dbQuery {
+        Users.insert {
+            it[username] = item.username
+            it[password] = item.password
+        }[Users.id]
     }
 
-    override suspend fun save(user: UserModel): UserModel {
-        mutex.withLock {
-            return when(val index = users.indexOfFirst { it.id == user.id }) {
-                -1 -> {
-                    val copy = user.copy(id = nextId++)
-                    users.add(copy)
-                    copy
-                }
-                else -> {
-                    users[index] = user
-                    user
-                }
-            }
-        }
+    override suspend fun getByUsername(username: String): UserModel? = dbQuery {
+        Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
     }
+
+    private fun toUserModel(row: ResultRow): UserModel =
+        UserModel(
+            id = row[Users.id],
+            username = row[Users.username],
+            password = row[Users.password],
+            likes = row[Users.likes],
+            notLikes = row[Users.notLikes],
+            isHater = row[Users.isHater],
+            isPromoter = row[Users.isPromoter]
+        )
 }

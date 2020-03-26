@@ -2,8 +2,12 @@ package ru.debaser.projects.tribune.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 import java.net.URI
 
 class DatabaseFactory(private val jdbcUrl: String) {
@@ -27,3 +31,12 @@ class DatabaseFactory(private val jdbcUrl: String) {
         return HikariDataSource(hikariConfig)
     }
 }
+
+suspend fun <T> dbQuery(block: suspend () -> T): T =
+    withContext(Dispatchers.IO) {
+        transaction {
+            runBlocking {
+                block()
+            }
+        }
+    }
