@@ -7,6 +7,7 @@ import io.ktor.response.respond
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.ErrorResponseDto
 import ru.debaser.projects.tribune.exception.DatabaseException
+import ru.debaser.projects.tribune.exception.UserExistsException
 
 
 class ErrorHandler {
@@ -17,6 +18,9 @@ class ErrorHandler {
             }
             exception<DatabaseException>() {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Database exception"))
+            }
+            exception<UserExistsException>() {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("User exists"))
             }
         }
     }

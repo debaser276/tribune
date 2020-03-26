@@ -12,12 +12,16 @@ interface UserRepository {
     suspend fun getByUsername(username: String): UserModel?
 }
 
-class UserRepositoryInMemoryWithMutex: UserRepository {
+class UserRepositoryDb: UserRepository {
 
     override suspend fun save(item: UserModel): Long? = dbQuery {
         Users.insert {
             it[username] = item.username
             it[password] = item.password
+            it[likes] = item.likes
+            it[notLikes] = item.notLikes
+            it[isHater] = item.isHater
+            it[isPromoter] = item.isPromoter
         }[Users.id]
     }
 
