@@ -21,9 +21,11 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
         with (builder) {
             constant(tag = "jwt-secret") with (
                     environment.config.propertyOrNull("tribune.jwt.secret")?.getString() ?:
-                    throw ConfigurationException("JWT secret is not specified")
-                    )
-            bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory().apply { init() } }
+                    throw ConfigurationException("JWT secret is not specified"))
+            constant(tag = "jdbc-url") with (
+                    environment.config.propertyOrNull("tribune.db.jdbcUrl")?.getString() ?:
+                    throw ConfigurationException("Jdbc url is not specified"))
+            bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
             bind<RoutingV1>() with eagerSingleton { RoutingV1(instance()) }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance()) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryInMemoryWithMutex() }

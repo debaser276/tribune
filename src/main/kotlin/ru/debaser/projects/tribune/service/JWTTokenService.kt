@@ -9,7 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
-class JWTTokenService (private val secret: String) {
+class JWTTokenService (secret: String) {
     private val algo = Algorithm.HMAC256(secret)
 
     val verifier: JWTVerifier = JWT.require(algo).build()

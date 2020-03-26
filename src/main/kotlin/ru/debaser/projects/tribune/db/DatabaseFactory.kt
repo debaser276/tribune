@@ -6,10 +6,9 @@ import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import java.net.URI
 
-class DatabaseFactory {
+class DatabaseFactory(private val jdbcUrl: String) {
     fun init() {
-        val databaseUrl = System.getenv("DATABASE_URL")
-        val dbUri = URI(databaseUrl)
+        val dbUri = URI(jdbcUrl)
         val username = dbUri.userInfo.split(":")[0]
         val password = dbUri.userInfo.split(":")[1]
         val jdbcUrl = "jdbc:postgresql://${dbUri.host}${dbUri.path}"
