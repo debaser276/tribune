@@ -9,18 +9,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
-class JWTTokenService (
-    private val password: String,
-    private val salt: String,
-    private val path: String
-) {
-    private lateinit var secret: String
-
-    init {
-        val decryptor = Encryptors.stronger(password, Hex.encodeHexString(salt.toByteArray(Charsets.UTF_8)))
-        secret = String(decryptor.decrypt(Files.readAllBytes(Paths.get(path))))
-    }
-
+class JWTTokenService (private val secret: String) {
     private val algo = Algorithm.HMAC256(secret)
 
     val verifier: JWTVerifier = JWT.require(algo).build()
