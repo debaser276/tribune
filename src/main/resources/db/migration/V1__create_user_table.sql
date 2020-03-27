@@ -3,7 +3,7 @@ CREATE TABLE USERS(
     username varchar(100) unique,
     password varchar(100),
     likes int,
-    not_likes int,
+    dislikes int,
     is_hater boolean,
     is_promoter boolean
 )

@@ -19,7 +19,7 @@ class UserRepositoryDb: UserRepository {
             it[username] = item.username
             it[password] = item.password
             it[likes] = item.likes
-            it[notLikes] = item.notLikes
+            it[dislikes] = item.dislikes
             it[isHater] = item.isHater
             it[isPromoter] = item.isPromoter
         }[Users.id]
@@ -35,7 +35,7 @@ class UserRepositoryDb: UserRepository {
             username = row[Users.username],
             password = row[Users.password],
             likes = row[Users.likes],
-            notLikes = row[Users.notLikes],
+            dislikes = row[Users.dislikes],
             isHater = row[Users.isHater],
             isPromoter = row[Users.isPromoter]
         )
