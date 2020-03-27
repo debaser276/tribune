@@ -7,7 +7,9 @@ import ru.debaser.projects.tribune.repository.UserRepository
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.AuthenticationResponseDto
 import ru.debaser.projects.tribune.exception.DatabaseException
+import ru.debaser.projects.tribune.exception.InvalidPasswordException
 import ru.debaser.projects.tribune.exception.UserExistsException
+import ru.debaser.projects.tribune.exception.UserNotFoundException
 import ru.debaser.projects.tribune.model.UserModel
 
 class UserService (
@@ -31,5 +33,14 @@ class UserService (
             val token = tokenService.generate(id)
             return AuthenticationResponseDto(id, token)
         }
+    }
+
+    suspend fun authenticate(input: AuthenticationRequestDto): AuthenticationResponseDto {
+        val model = repo.getByUsername(input.username) ?: throw UserNotFoundException()
+        if (!passwordEncoder.matches(input.password, model.password)) {
+            throw InvalidPasswordException()
+        }
+        val token = tokenService.generate(model.id)
+        return AuthenticationResponseDto(model.id, token)
     }
 }

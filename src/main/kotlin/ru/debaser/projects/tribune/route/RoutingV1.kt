@@ -23,6 +23,10 @@ class RoutingV1(
                         else -> throw LoginAlreadyExistsException()
                     }
                 }
+                post("/authentication") {
+                    val input = call.receive<AuthenticationRequestDto>()
+                    call.respond(userService.authenticate(input))
+                }
             }
         }
     }
