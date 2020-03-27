@@ -22,6 +22,7 @@ class UserRepositoryDb: UserRepository {
             it[dislikes] = item.dislikes
             it[isHater] = item.isHater
             it[isPromoter] = item.isPromoter
+            it[isReader] = item.isReader
         }[Users.id]
     }
 
@@ -37,6 +38,7 @@ class UserRepositoryDb: UserRepository {
             likes = row[Users.likes],
             dislikes = row[Users.dislikes],
             isHater = row[Users.isHater],
-            isPromoter = row[Users.isPromoter]
+            isPromoter = row[Users.isPromoter],
+            isReader = row[Users.isReader]
         )
 }

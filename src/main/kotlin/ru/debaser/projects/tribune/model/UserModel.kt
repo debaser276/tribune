@@ -7,5 +7,6 @@ data class UserModel(
     val likes: Int = 0,
     val dislikes: Int = 0,
     val isHater: Boolean = false,
-    val isPromoter: Boolean = false
+    val isPromoter: Boolean = false,
+    val isReader: Boolean = false
 )

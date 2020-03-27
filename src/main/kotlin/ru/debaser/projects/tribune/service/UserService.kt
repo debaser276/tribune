@@ -43,4 +43,6 @@ class UserService (
         val token = tokenService.generate(model.id)
         return AuthenticationResponseDto(model.id, token)
     }
+
+
 }

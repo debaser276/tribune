@@ -11,4 +11,5 @@ object Users : Table() {
     val dislikes: Column<Int> = integer("dislikes")
     val isHater: Column<Boolean> = bool("is_hater")
     val isPromoter: Column<Boolean> = bool("is_promoter")
+    val isReader: Column<Boolean> = bool("is_reader")
 }

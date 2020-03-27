@@ -5,5 +5,6 @@ CREATE TABLE USERS(
     likes int,
     dislikes int,
     is_hater boolean,
-    is_promoter boolean
+    is_promoter boolean,
+    is_reader boolean
 )
