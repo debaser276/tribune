@@ -12,6 +12,7 @@ import ru.debaser.projects.tribune.db.DatabaseFactory
 import ru.debaser.projects.tribune.repository.UserRepository
 import ru.debaser.projects.tribune.repository.UserRepositoryDb
 import ru.debaser.projects.tribune.route.RoutingV1
+import ru.debaser.projects.tribune.service.FileService
 import ru.debaser.projects.tribune.service.JWTTokenService
 import ru.debaser.projects.tribune.service.UserService
 import javax.naming.ConfigurationException
@@ -26,9 +27,13 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             constant(tag = "jdbc-url") with (
                     environment.config.propertyOrNull("tribune.db.jdbcUrl")?.getString() ?:
                     throw ConfigurationException("Jdbc url is not specified"))
+            constant(tag = "upload-dir") with (
+                    environment.config.propertyOrNull("tribune.upload.dir")?.getString() ?:
+                    throw ConfigurationException("Upload dir is not specified"))
+            bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
             bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
             bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
-            bind<RoutingV1>() with eagerSingleton { RoutingV1(instance()) }
+            bind<RoutingV1>() with eagerSingleton { RoutingV1(instance(tag = "upload-dir"), instance(), instance()) }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryDb() }
             bind<JWTTokenService>() with eagerSingleton {

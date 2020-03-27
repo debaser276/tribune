@@ -21,6 +21,8 @@ class UserService (
 
     suspend fun getByUsername(username: String): UserModel? = repo.getByUsername(username)
 
+    suspend fun getById(id: Long): UserModel? = repo.getById(id)
+
     suspend fun register(input: AuthenticationRequestDto): AuthenticationResponseDto {
         mutex.withLock {
             if (repo.getByUsername(input.username) != null) {

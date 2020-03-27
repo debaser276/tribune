@@ -9,6 +9,7 @@ import ru.debaser.projects.tribune.model.UserModel
 
 interface UserRepository {
     suspend fun save(user: UserModel): Long?
+    suspend fun getById(id: Long): UserModel?
     suspend fun getByUsername(username: String): UserModel?
 }
 
@@ -26,6 +27,9 @@ class UserRepositoryDb: UserRepository {
         }[Users.id]
     }
 
+    override suspend fun getById(id: Long): UserModel? = dbQuery {
+        Users.select { Users.id eq id }.map { toUserModel(it) }.singleOrNull()
+    }
     override suspend fun getByUsername(username: String): UserModel? = dbQuery {
         Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
     }
