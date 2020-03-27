@@ -4,10 +4,8 @@ import io.ktor.application.call
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
-import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.ErrorResponseDto
-import ru.debaser.projects.tribune.exception.DatabaseException
-import ru.debaser.projects.tribune.exception.UserExistsException
+import ru.debaser.projects.tribune.exception.*
 
 
 class ErrorHandler {
@@ -21,6 +19,12 @@ class ErrorHandler {
             }
             exception<UserExistsException>() {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("User exists"))
+            }
+            exception<UserNotFoundException>() {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Username not found"))
+            }
+            exception<InvalidPasswordException>() {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Password invalid"))
             }
         }
     }
