@@ -18,10 +18,10 @@ import ru.debaser.projects.tribune.service.IdeaService
 import ru.debaser.projects.tribune.service.UserService
 
 class RoutingV1(
-    val staticPath: String,
-    val userService: UserService,
-    val fileService: FileService,
-    val ideaService: IdeaService
+    private val staticPath: String,
+    private val userService: UserService,
+    private val fileService: FileService,
+    private val ideaService: IdeaService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -51,7 +51,7 @@ class RoutingV1(
                     route("ideas") {
                         post {
                             val input = call.receive<IdeaModel>()
-                            val id = ideaService.save(input)
+                            val id = ideaService.postIdea(input)
                             call.respond(ideaService.getById(id))
                         }
                     }

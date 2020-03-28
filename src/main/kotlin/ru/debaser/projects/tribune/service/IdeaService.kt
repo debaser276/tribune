@@ -8,8 +8,8 @@ import ru.debaser.projects.tribune.repository.IdeaRepository
 class IdeaService (
     private val repo: IdeaRepository
 ) {
-    suspend fun save(idea: IdeaModel): Long =
-        repo.save(idea) ?: throw DatabaseException()
+    suspend fun postIdea(idea: IdeaModel): Long =
+        repo.postIdea(idea) ?: throw DatabaseException()
 
     suspend fun getById(id: Long): IdeaModel =
         repo.getById(id) ?: throw IdeaNotFoundException()

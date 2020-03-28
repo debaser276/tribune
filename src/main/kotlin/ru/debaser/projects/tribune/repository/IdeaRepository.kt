@@ -8,13 +8,13 @@ import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.model.IdeaModel
 
 interface IdeaRepository {
-    suspend fun save(idea: IdeaModel): Long?
+    suspend fun postIdea(idea: IdeaModel): Long?
     suspend fun getById(id: Long): IdeaModel?
 }
 
 class IdeaRepositoryDb: IdeaRepository {
 
-    override suspend fun save(idea: IdeaModel): Long? = dbQuery {
+    override suspend fun postIdea(idea: IdeaModel): Long? = dbQuery {
         Ideas.insert {
             it[authorId] = idea.authorId
             it[created] = System.currentTimeMillis() / 1000
