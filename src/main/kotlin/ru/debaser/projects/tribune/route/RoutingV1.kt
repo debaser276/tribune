@@ -12,13 +12,16 @@ import io.ktor.routing.post
 import io.ktor.routing.route
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
+import ru.debaser.projects.tribune.model.IdeaModel
 import ru.debaser.projects.tribune.service.FileService
+import ru.debaser.projects.tribune.service.IdeaService
 import ru.debaser.projects.tribune.service.UserService
 
 class RoutingV1(
     val staticPath: String,
     val userService: UserService,
-    val fileService: FileService
+    val fileService: FileService,
+    val ideaService: IdeaService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -43,6 +46,13 @@ class RoutingV1(
                             val multipart = call.receiveMultipart()
                             val response = fileService.save(multipart)
                             call.respond(response)
+                        }
+                    }
+                    route("ideas") {
+                        post {
+                            val input = call.receive<IdeaModel>()
+                            val id = ideaService.save(input)
+                            call.respond(ideaService.getById(id))
                         }
                     }
                 }
