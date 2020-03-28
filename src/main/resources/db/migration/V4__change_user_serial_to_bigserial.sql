@@ -1,0 +1,1 @@
+alter table USERS alter column id set data type bigint

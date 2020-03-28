@@ -3,6 +3,7 @@ package ru.debaser.projects.tribune.model
 data class Vote(
     val id: Long,
     val authorId: Long,
+    val ideaId: Long,
     val created: Long,
     val isUp: Boolean
 )
@@ -12,9 +13,7 @@ data class IdeaModel(
     val authorId: Long,
     val created: Long,
     val content: String,
-    val imageRes: String,
+    val media: String,
     val link: String? = null,
-    val isHater: Boolean = false,
-    val isPromoter: Boolean = false,
-    val votes: Set<Vote> = setOf()
+    val votes: Set<Int> = setOf()
 )
