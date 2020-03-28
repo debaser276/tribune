@@ -10,7 +10,6 @@ object Ideas : Table() {
     val content: Column<String> = text("content")
     val media: Column<String> = text("media")
     val link: Column<String?> = text("link").nullable()
-    val votes: Column<String> = text("votes")
     val likes: Column<Int> = integer("likes")
     val dislikes: Column<Int> = integer("dislikes")
 }

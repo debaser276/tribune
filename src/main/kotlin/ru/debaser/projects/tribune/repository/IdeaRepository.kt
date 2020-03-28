@@ -18,7 +18,6 @@ class IdeaRepositoryDb: IdeaRepository {
             it[content] = idea.content
             it[media] = idea.media
             it[link] = idea.link
-            it[votes] = idea.votes.joinToString(",")
             it[likes] = idea.likes
             it[dislikes] = idea.dislikes
         }[Ideas.id]
