@@ -17,7 +17,7 @@ class IdeaRepositoryDb: IdeaRepository {
     override suspend fun save(idea: IdeaModel): Long? = dbQuery {
         Ideas.insert {
             it[authorId] = idea.authorId
-            it[created] = idea.created
+            it[created] = System.currentTimeMillis() / 1000
             it[content] = idea.content
             it[media] = idea.media
             it[link] = idea.link

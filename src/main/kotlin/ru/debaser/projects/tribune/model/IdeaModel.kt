@@ -11,7 +11,7 @@ data class Vote(
 data class IdeaModel(
     val id: Long,
     val authorId: Long,
-    val created: Long = System.currentTimeMillis() / 1000,
+    val created: Long,
     val content: String,
     val media: String,
     val link: String? = null,
