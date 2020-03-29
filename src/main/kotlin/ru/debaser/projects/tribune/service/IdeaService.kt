@@ -1,5 +1,6 @@
 package ru.debaser.projects.tribune.service
 
+import ru.debaser.projects.tribune.dto.IdeaResponseDto
 import ru.debaser.projects.tribune.exception.DatabaseException
 import ru.debaser.projects.tribune.exception.IdeaNotFoundException
 import ru.debaser.projects.tribune.model.IdeaModel
@@ -13,4 +14,9 @@ class IdeaService (
 
     suspend fun getById(id: Long): IdeaModel =
         repo.getById(id) ?: throw IdeaNotFoundException()
+
+    suspend fun like(ideaId: Long, userId: Long): IdeaResponseDto {
+        repo.like(ideaId, userId)
+        return IdeaResponseDto.fromModel(getById(ideaId))
+    }
 }

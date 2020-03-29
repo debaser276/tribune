@@ -1,7 +1,10 @@
 package ru.debaser.projects.tribune.route
 
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
+import io.ktor.auth.authentication
+import io.ktor.features.ParameterConversionException
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.request.receive
@@ -9,13 +12,22 @@ import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.post
+import io.ktor.routing.put
 import io.ktor.routing.route
+import io.ktor.util.pipeline.PipelineContext
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.model.IdeaModel
+import ru.debaser.projects.tribune.model.UserModel
 import ru.debaser.projects.tribune.service.FileService
 import ru.debaser.projects.tribune.service.IdeaService
 import ru.debaser.projects.tribune.service.UserService
+
+val <T: Any> PipelineContext<T, ApplicationCall>.id
+    get() = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException("id", "Long")
+
+val <T: Any> PipelineContext<T, ApplicationCall>.me
+    get() = call.authentication.principal<UserModel>()
 
 class RoutingV1(
     private val staticPath: String,
@@ -48,11 +60,15 @@ class RoutingV1(
                             call.respond(response)
                         }
                     }
-                    route("ideas") {
+                    route("/ideas") {
                         post {
                             val input = call.receive<IdeaModel>()
                             val id = ideaService.postIdea(input)
                             call.respond(ideaService.getById(id))
+                        }
+                        put("/{id}/like") {
+
+                            call.respond(ideaService.like(id, me!!.id))
                         }
                     }
                 }

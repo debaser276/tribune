@@ -17,24 +17,21 @@ class UserService (
     private val tokenService: JWTTokenService,
     private val passwordEncoder: PasswordEncoder
 ) {
-    private val mutex = Mutex()
 
     suspend fun getByUsername(username: String): UserModel? = repo.getByUsername(username)
 
     suspend fun getById(id: Long): UserModel? = repo.getById(id)
 
     suspend fun register(input: AuthenticationRequestDto): AuthenticationResponseDto {
-        mutex.withLock {
-            if (repo.getByUsername(input.username) != null) {
-                throw UserExistsException()
-            }
-            val id = repo.save(UserModel(
-                username = input.username,
-                password = passwordEncoder.encode(input.password)
-            )) ?: throw DatabaseException()
-            val token = tokenService.generate(id)
-            return AuthenticationResponseDto(id, token)
+        if (repo.getByUsername(input.username) != null) {
+            throw UserExistsException()
         }
+        val id = repo.save(UserModel(
+            username = input.username,
+            password = passwordEncoder.encode(input.password)
+        )) ?: throw DatabaseException()
+        val token = tokenService.generate(id)
+        return AuthenticationResponseDto(id, token)
     }
 
     suspend fun authenticate(input: AuthenticationRequestDto): AuthenticationResponseDto {

@@ -1,9 +1,6 @@
 package ru.debaser.projects.tribune.repository
 
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import ru.debaser.projects.tribune.db.data.idea.Ideas
 import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.model.IdeaModel
@@ -11,6 +8,7 @@ import ru.debaser.projects.tribune.model.IdeaModel
 interface IdeaRepository {
     suspend fun postIdea(idea: IdeaModel): Long?
     suspend fun getById(id: Long): IdeaModel?
+    suspend fun like(ideaId: Long, userId: Long): Int
 }
 
 class IdeaRepositoryDb: IdeaRepository {
@@ -28,6 +26,15 @@ class IdeaRepositoryDb: IdeaRepository {
     override suspend fun getById(id: Long): IdeaModel? = dbQuery {
         Ideas.select { Ideas.id eq id }.map { toIdeaModel(it) }.singleOrNull()
     }
+
+    override suspend fun like(ideaId: Long, userId: Long) = dbQuery {
+        val likes = Ideas.select { Ideas.id eq ideaId }.map { toIdeaModel(it) }.single().likes.toMutableSet()
+        likes.add(userId)
+        Ideas.update({ Ideas.id eq ideaId }) {
+            it[Ideas.likes] = likes.toSet().joinToString(",")
+        }
+    }
+
 
     private fun toIdeaModel(row: ResultRow): IdeaModel =
         IdeaModel(
