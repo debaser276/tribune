@@ -43,5 +43,5 @@ class UserService (
         return AuthenticationResponseDto(model.id, token)
     }
 
-
+    suspend fun like(id: Long) = repo.like(id)
 }

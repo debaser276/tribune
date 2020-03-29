@@ -1,13 +1,5 @@
 package ru.debaser.projects.tribune.model
 
-data class Vote(
-    val id: Long,
-    val authorId: Long,
-    val ideaId: Long,
-    val created: Long,
-    val isUp: Boolean
-)
-
 data class IdeaModel(
     val id: Long,
     val authorId: Long,

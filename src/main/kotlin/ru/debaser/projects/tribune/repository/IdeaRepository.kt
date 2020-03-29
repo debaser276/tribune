@@ -35,7 +35,6 @@ class IdeaRepositoryDb: IdeaRepository {
         }
     }
 
-
     private fun toIdeaModel(row: ResultRow): IdeaModel =
         IdeaModel(
             id = row[Ideas.id],

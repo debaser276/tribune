@@ -9,10 +9,7 @@ import org.kodein.di.generic.with
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import ru.debaser.projects.tribune.db.DatabaseFactory
-import ru.debaser.projects.tribune.repository.IdeaRepository
-import ru.debaser.projects.tribune.repository.IdeaRepositoryDb
-import ru.debaser.projects.tribune.repository.UserRepository
-import ru.debaser.projects.tribune.repository.UserRepositoryDb
+import ru.debaser.projects.tribune.repository.*
 import ru.debaser.projects.tribune.route.RoutingV1
 import ru.debaser.projects.tribune.service.FileService
 import ru.debaser.projects.tribune.service.IdeaService
@@ -51,7 +48,8 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             }
             bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
             bind<IdeaRepository>() with eagerSingleton { IdeaRepositoryDb() }
-            bind<IdeaService>() with eagerSingleton { IdeaService(instance()) }
+            bind<VoteRepository>() with eagerSingleton { VoteRepositoryDb() }
+            bind<IdeaService>() with eagerSingleton { IdeaService(instance(), instance()) }
         }
     }
 }
