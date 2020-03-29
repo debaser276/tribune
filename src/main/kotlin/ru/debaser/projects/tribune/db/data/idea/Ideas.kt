@@ -10,6 +10,6 @@ object Ideas : Table() {
     val content: Column<String> = text("content")
     val media: Column<String> = text("media")
     val link: Column<String?> = text("link").nullable()
-    val likes: Column<Int> = integer("likes")
-    val dislikes: Column<Int> = integer("dislikes")
+    val likes: Column<String> = text("likes").default("")
+    val dislikes: Column<String> = text("dislikes").default("")
 }

@@ -9,8 +9,8 @@ data class IdeaResponseDto(
     val content: String,
     val media: String,
     val link: String?,
-    val likes: Int,
-    val dislikes: Int
+    val likes: Set<Long>,
+    val dislikes: Set<Long>
 ) {
     companion object {
         fun fromModel(idea: IdeaModel) = IdeaResponseDto(

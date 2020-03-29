@@ -1,5 +1,6 @@
 package ru.debaser.projects.tribune.repository
 
+import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -21,8 +22,6 @@ class IdeaRepositoryDb: IdeaRepository {
             it[content] = idea.content
             it[media] = idea.media
             it[link] = idea.link
-            it[likes] = idea.likes
-            it[dislikes] = idea.dislikes
         }[Ideas.id]
     }
 
@@ -38,7 +37,10 @@ class IdeaRepositoryDb: IdeaRepository {
             content = row[Ideas.content],
             media = row[Ideas.media],
             link = row[Ideas.link],
-            likes = row[Ideas.likes],
-            dislikes = row[Ideas.dislikes]
+            likes = splitOrEmptySet(row, Ideas.likes),
+            dislikes = splitOrEmptySet(row, Ideas.dislikes)
         )
+
+    private fun splitOrEmptySet(row: ResultRow, col: Column<String>) =
+        if (row[col].isNotEmpty()) row[col].split(",").map { it.toLong() }.toSet() else setOf()
 }

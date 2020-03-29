@@ -15,6 +15,6 @@ data class IdeaModel(
     val content: String,
     val media: String,
     val link: String? = null,
-    val likes: Int = 0,
-    val dislikes: Int = 0
+    val likes: Set<Long> = emptySet(),
+    val dislikes: Set<Long> = emptySet()
 )
