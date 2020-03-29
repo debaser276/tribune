@@ -67,8 +67,10 @@ class RoutingV1(
                             call.respond(ideaService.getById(id))
                         }
                         put("/{id}/like") {
-                            userService.like(me!!.id)
                             call.respond(ideaService.like(id, me!!.id))
+                        }
+                        put("/{id}/dislike") {
+
                         }
                     }
                 }

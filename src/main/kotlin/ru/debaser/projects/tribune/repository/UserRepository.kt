@@ -9,7 +9,6 @@ interface UserRepository {
     suspend fun save(user: UserModel): Long?
     suspend fun getById(id: Long): UserModel?
     suspend fun getByUsername(username: String): UserModel?
-    suspend fun like(id: Long): Int
 }
 
 class UserRepositoryDb: UserRepository {
@@ -30,15 +29,6 @@ class UserRepositoryDb: UserRepository {
     override suspend fun getByUsername(username: String): UserModel? = dbQuery {
         Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
     }
-
-    override suspend fun like(id: Long) = dbQuery {
-        Users.update({ Users.id eq id }) {
-            with(SqlExpressionBuilder) {
-                it.update(likes, likes + 1)
-            }
-        }
-    }
-
 
     private fun toUserModel(row: ResultRow): UserModel =
         UserModel(
