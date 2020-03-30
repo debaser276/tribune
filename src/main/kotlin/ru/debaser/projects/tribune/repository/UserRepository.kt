@@ -9,6 +9,8 @@ interface UserRepository {
     suspend fun save(user: UserModel): Long?
     suspend fun getById(id: Long): UserModel?
     suspend fun getByUsername(username: String): UserModel?
+    suspend fun reader(id: Long, set: Boolean)
+    suspend fun isReader(id: Long): Boolean
 }
 
 class UserRepositoryDb: UserRepository {
@@ -28,6 +30,18 @@ class UserRepositoryDb: UserRepository {
     }
     override suspend fun getByUsername(username: String): UserModel? = dbQuery {
         Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
+    }
+
+    override suspend fun reader(id: Long, set: Boolean) {
+        dbQuery {
+            Users.update({ Users.id eq id }) {
+                it[isReader] = set
+            }
+        }
+    }
+
+    override suspend fun isReader(id: Long): Boolean = dbQuery {
+        Users.select { Users.id eq id }.map { toUserModel(it) }.single().isReader
     }
 
     private fun toUserModel(row: ResultRow): UserModel =

@@ -42,4 +42,8 @@ class UserService (
         val token = tokenService.generate(model.id)
         return AuthenticationResponseDto(model.id, token)
     }
+
+    suspend fun reader(id: Long, set: Boolean) = repo.reader(id, set)
+
+    suspend fun isReader(id: Long) = repo.isReader(id)
 }

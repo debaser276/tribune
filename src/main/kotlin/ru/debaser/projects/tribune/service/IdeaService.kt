@@ -29,4 +29,18 @@ class IdeaService (
             return IdeaResponseDto.fromModel(getById(ideaId))
         }
     }
+
+    suspend fun dislike(ideaId: Long, userId: Long): IdeaResponseDto {
+        mutex.withLock {
+            ideaRepo.dislike(ideaId, userId)
+            voteRepo.addVote(userId, ideaId, false)
+            return IdeaResponseDto.fromModel(getById(ideaId))
+        }
+    }
+
+    suspend fun isReaderEnough(id: Long): Boolean {
+        val likes = voteRepo.getLikesCount(id)
+        val dislikes = voteRepo.getDislikesCount(id)
+        return likes < 1 && dislikes > 1
+    }
 }

@@ -1,12 +1,16 @@
 package ru.debaser.projects.tribune.repository
 
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import ru.debaser.projects.tribune.db.data.vote.Votes
 import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.model.VoteModel
 
 interface VoteRepository {
     suspend fun addVote(authorId: Long, ideaId: Long, isUp: Boolean): Long?
+    suspend fun getLikesCount(ideaId: Long): Int
+    suspend fun getDislikesCount(ideaId: Long): Int
 }
 
 class VoteRepositoryDb: VoteRepository {
@@ -17,5 +21,13 @@ class VoteRepositoryDb: VoteRepository {
             it[created] = System.currentTimeMillis() / 1000
             it[this.isUp] = isUp
         }[Votes.id]
+    }
+
+    override suspend fun getLikesCount(ideaId: Long): Int = dbQuery {
+        Votes.select { (Votes.ideaId eq ideaId) and (Votes.isUp eq true) }.count()
+    }
+
+    override suspend fun getDislikesCount(ideaId: Long): Int = dbQuery {
+        Votes.select { (Votes.ideaId eq ideaId) and (Votes.isUp eq false) }.count()
     }
 }

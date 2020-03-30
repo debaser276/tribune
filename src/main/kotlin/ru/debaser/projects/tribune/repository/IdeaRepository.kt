@@ -8,7 +8,8 @@ import ru.debaser.projects.tribune.model.IdeaModel
 interface IdeaRepository {
     suspend fun postIdea(idea: IdeaModel): Long?
     suspend fun getById(id: Long): IdeaModel?
-    suspend fun like(ideaId: Long, userId: Long): Int
+    suspend fun like(ideaId: Long, userId: Long)
+    suspend fun dislike(ideaId: Long, userId: Long)
 }
 
 class IdeaRepositoryDb: IdeaRepository {
@@ -27,11 +28,23 @@ class IdeaRepositoryDb: IdeaRepository {
         Ideas.select { Ideas.id eq id }.map { toIdeaModel(it) }.singleOrNull()
     }
 
-    override suspend fun like(ideaId: Long, userId: Long) = dbQuery {
-        val likes = Ideas.select { Ideas.id eq ideaId }.map { toIdeaModel(it) }.single().likes.toMutableSet()
-        likes.add(userId)
-        Ideas.update({ Ideas.id eq ideaId }) {
-            it[Ideas.likes] = likes.toSet().joinToString(",")
+    override suspend fun like(ideaId: Long, userId: Long) {
+        dbQuery {
+            val likes = Ideas.select { Ideas.id eq ideaId }.map { toIdeaModel(it) }.single().likes.toMutableSet()
+            likes.add(userId)
+            Ideas.update({ Ideas.id eq ideaId }) {
+                it[Ideas.likes] = likes.toSet().joinToString(",")
+            }
+        }
+    }
+
+    override suspend fun dislike(ideaId: Long, userId: Long) {
+        dbQuery {
+            val dislikes = Ideas.select { Ideas.id eq ideaId }.map { toIdeaModel(it) }.single().dislikes.toMutableSet()
+            dislikes.add(userId)
+            Ideas.update({ Ideas.id eq ideaId }) {
+                it[Ideas.dislikes] = dislikes.toSet().joinToString(",")
+            }
         }
     }
 
