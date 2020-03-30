@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+
+  postgres:
+    image: "postgres:9.6.0"
+    restart: "always"
+    ports:
+      - "54321:5432"
+    environment:
+      POSTGRES_USER: "debaser"
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "test"

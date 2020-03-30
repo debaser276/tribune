@@ -15,7 +15,8 @@ class DatabaseFactory(private val jdbcUrl: String) {
         val dbUri = URI(jdbcUrl)
         val username = dbUri.userInfo.split(":")[0]
         val password = dbUri.userInfo.split(":")[1]
-        val jdbcUrl = "jdbc:postgresql://${dbUri.host}${dbUri.path}"
+        val port = dbUri.port.toString()
+        val jdbcUrl = "jdbc:postgresql://${dbUri.host}:$port${dbUri.path}"
         Database.connect(hikari(jdbcUrl, username, password))
         val flyway = Flyway.configure().dataSource(jdbcUrl, username, password).load()
         flyway.migrate()
