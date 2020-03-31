@@ -12,9 +12,11 @@ import ru.debaser.projects.tribune.repository.VoteRepository
 
 class IdeaService (
     private val ideaRepo: IdeaRepository,
-    private val voteRepo: VoteRepository
+    private val voteRepo: VoteRepository,
+    private val readerDislikesStr: String
 ) {
     private val mutex = Mutex()
+    private val readerDislikes = readerDislikesStr.toInt()
 
     suspend fun postIdea(idea: IdeaModel): Long =
         ideaRepo.postIdea(idea) ?: throw DatabaseException()
@@ -41,6 +43,6 @@ class IdeaService (
     suspend fun isReaderEnough(id: Long): Boolean {
         val likes = voteRepo.getLikesCount(id)
         val dislikes = voteRepo.getDislikesCount(id)
-        return likes < 1 && dislikes > 1
+        return likes < 1 && dislikes > readerDislikes
     }
 }

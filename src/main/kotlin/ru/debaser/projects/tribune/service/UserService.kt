@@ -40,7 +40,7 @@ class UserService (
             throw InvalidPasswordException()
         }
         val token = tokenService.generate(model.id)
-        return AuthenticationResponseDto(model.id, token)
+        return AuthenticationResponseDto.fromModel(model, token)
     }
 
     suspend fun reader(id: Long, set: Boolean) = repo.reader(id, set)

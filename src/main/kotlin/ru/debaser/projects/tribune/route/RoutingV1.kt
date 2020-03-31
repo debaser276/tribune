@@ -68,15 +68,17 @@ class RoutingV1(
                         }
                         put("/{id}/like") {
                             val response = ideaService.like(id, me!!.id)
-                            if (!ideaService.isReaderEnough(id) && userService.isReader(me!!.id)) {
-                                userService.reader(ideaService.getById(id).authorId, false)
+                            val authorId = ideaService.getById(id).authorId
+                            if (!ideaService.isReaderEnough(id) && userService.isReader(authorId)) {
+                                userService.reader(authorId, false)
                             }
                             call.respond(response)
                         }
                         put("/{id}/dislike") {
                             val response = ideaService.dislike(id, me!!.id)
-                            if (ideaService.isReaderEnough(id) && !userService.isReader(me!!.id)) {
-                                userService.reader(ideaService.getById(id).authorId, true)
+                            val authorId = ideaService.getById(id).authorId
+                            if (ideaService.isReaderEnough(id) && !userService.isReader(authorId)) {
+                                userService.reader(authorId, true)
                             }
                             call.respond(response)
                         }

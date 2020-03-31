@@ -30,6 +30,9 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             constant(tag = "upload-dir") with (
                     environment.config.propertyOrNull("tribune.upload.dir")?.getString() ?:
                     throw ConfigurationException("Upload dir is not specified"))
+            constant(tag = "reader-dislikes") with (
+                    environment.config.propertyOrNull("tribune.settings.reader-dislikes")?.getString() ?:
+                    throw ConfigurationException("Upload dir is not specified"))
             bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
             bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
             bind<RoutingV1>() with eagerSingleton {
@@ -49,7 +52,11 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
             bind<IdeaRepository>() with eagerSingleton { IdeaRepositoryDb() }
             bind<VoteRepository>() with eagerSingleton { VoteRepositoryDb() }
-            bind<IdeaService>() with eagerSingleton { IdeaService(instance(), instance()) }
+            bind<IdeaService>() with eagerSingleton {
+                IdeaService(
+                    instance(),
+                    instance(),
+                    instance(tag = "reader-dislikes")) }
         }
     }
 }
