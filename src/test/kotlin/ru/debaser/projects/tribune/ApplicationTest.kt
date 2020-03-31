@@ -4,9 +4,7 @@ import com.jayway.jsonpath.JsonPath
 import io.ktor.application.Application
 import io.ktor.config.MapApplicationConfig
 import io.ktor.http.*
-import io.ktor.server.testing.handleRequest
-import io.ktor.server.testing.setBody
-import io.ktor.server.testing.withTestApplication
+import io.ktor.server.testing.*
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -33,10 +31,7 @@ class ApplicationTest {
     fun testAuth() {
         withTestApplication(configure) {
             runBlocking {
-                handleRequest(HttpMethod.Post, "/api/v1/registration") {
-                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"username": "user1","password": "Password"}""")
-                }
+                regUser("user1")
                 var token: String?
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
@@ -53,38 +48,16 @@ class ApplicationTest {
     fun testReader() {
         withTestApplication(configure) {
             runBlocking {
-                var token2: String?
-                with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
-                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"username": "user2","password": "Password"}""")
-                }) {
-                    token2 = JsonPath.read<String>(response.content!!, "$.token")
-                }
-                var token3: String?
-                with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
-                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"username": "user3","password": "Password"}""")
-                }) {
-                    token3 = JsonPath.read<String>(response.content!!, "$.token")
-                }
-                var token4: String?
-                with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
-                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"username": "user4","password": "Password"}""")
-                }) {
-                    token4 = JsonPath.read<String>(response.content!!, "$.token")
-                }
+                val token2 = regUser("user2")
+                val token3 = regUser("user3")
+                val token4 = regUser("user4")
                 handleRequest(HttpMethod.Post, "/api/v1/ideas") {
                     addHeader(HttpHeaders.Authorization, "Bearer $token2")
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"authorId": 2,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
                 }
-                handleRequest(HttpMethod.Put, "/api/v1/ideas/1/dislike") {
-                    addHeader(HttpHeaders.Authorization, "Bearer $token3")
-                }
-                handleRequest(HttpMethod.Put, "/api/v1/ideas/1/dislike") {
-                    addHeader(HttpHeaders.Authorization, "Bearer $token4")
-                }
+                vote("dislike", token3)
+                vote("dislike", token4)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user2","password": "Password"}""")
@@ -100,16 +73,8 @@ class ApplicationTest {
     fun testNotReader() {
         withTestApplication(configure) {
             runBlocking {
-                var token5: String?
-                with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
-                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"username": "user5","password": "Password"}""")
-                }) {
-                    token5 = JsonPath.read<String>(response.content!!, "$.token")
-                }
-                handleRequest(HttpMethod.Put, "/api/v1/ideas/1/like") {
-                    addHeader(HttpHeaders.Authorization, "Bearer $token5")
-                }
+                val token5 = regUser("user5")
+                vote("like", token5)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user2","password": "Password"}""")
@@ -121,4 +86,18 @@ class ApplicationTest {
         }
     }
 
+    private fun TestApplicationEngine.regUser(username: String): String {
+        with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
+            addHeader(HttpHeaders.ContentType, jsonContentType.toString())
+            setBody("""{"username": "$username","password": "Password"}""")
+        }) {
+            return JsonPath.read<String>(response.content!!, "$.token")
+        }
+    }
+
+    private fun TestApplicationEngine.vote(vote: String, token: String) {
+        handleRequest(HttpMethod.Put, "/api/v1/ideas/1/$vote") {
+            addHeader(HttpHeaders.Authorization, "Bearer $token")
+        }
+    }
 }
