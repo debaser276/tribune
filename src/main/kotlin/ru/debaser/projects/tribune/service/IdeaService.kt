@@ -57,4 +57,13 @@ class IdeaService (
 
     suspend fun getAfter(id: Long): List<IdeaResponseDto> =
         getAll().asSequence().filter { it.id > id }.take(resultSize).toList()
+
+    suspend fun getRecentByAuthor(authorId: Long): List<IdeaResponseDto> =
+        getAll().asSequence().filter { it.authorId == authorId }.take(resultSize).toList()
+
+    suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
+        getAll().asSequence().filter { it.authorId == authorId }.filter { it.id < id }.take(resultSize).toList()
+
+    suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
+        getAll().asSequence().filter { it.authorId == authorId }.filter { it.id > id }.take(resultSize).toList()
 }

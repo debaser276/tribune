@@ -23,6 +23,9 @@ import ru.debaser.projects.tribune.service.UserService
 val <T: Any> PipelineContext<T, ApplicationCall>.id
     get() = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException("id", "Long")
 
+val <T: Any> PipelineContext<T, ApplicationCall>.authorId
+    get() = call.parameters["authorId"]?.toLongOrNull() ?: throw ParameterConversionException("id", "Long")
+
 val <T: Any> PipelineContext<T, ApplicationCall>.me
     get() = call.authentication.principal<UserModel>()
 
@@ -87,6 +90,14 @@ class RoutingV1(
                         }
                         get("/{id}/after") {
                             call.respond(ideaService.getAfter(id))
+                        }
+                        get("/recent/{authorId}") {
+                            call.respond(ideaService.getRecentByAuthor(authorId))
+                        }
+                    }
+                    route("/votes") {
+                        get {
+
                         }
                     }
                 }

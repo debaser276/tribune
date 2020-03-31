@@ -15,9 +15,11 @@ class IdeaTest {
         withTestApplication(confiure) {
             runBlocking {
                 val token1 = authToken("user1")
+                val token2 = authToken("user2")
+                val token3 = authToken("user3")
                 idea("1", token1)
-                idea("1", token1)
-                idea("1", token1)
+                idea("2", token2)
+                idea("3", token3)
             }
         }
     }
