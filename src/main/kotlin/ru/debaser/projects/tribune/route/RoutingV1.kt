@@ -10,10 +10,7 @@ import io.ktor.http.content.static
 import io.ktor.request.receive
 import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.routing.post
-import io.ktor.routing.put
-import io.ktor.routing.route
+import io.ktor.routing.*
 import io.ktor.util.pipeline.PipelineContext
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
@@ -81,6 +78,15 @@ class RoutingV1(
                                 userService.reader(authorId, true)
                             }
                             call.respond(response)
+                        }
+                        get("/recent") {
+                            call.respond(ideaService.getRecent())
+                        }
+                        get("/{id}/before") {
+                            call.respond(ideaService.getBefore(id))
+                        }
+                        get("/{id}/after") {
+                            call.respond(ideaService.getAfter(id))
                         }
                     }
                 }

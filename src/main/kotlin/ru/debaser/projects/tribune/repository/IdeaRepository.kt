@@ -10,6 +10,7 @@ interface IdeaRepository {
     suspend fun getById(id: Long): IdeaModel?
     suspend fun like(ideaId: Long, userId: Long)
     suspend fun dislike(ideaId: Long, userId: Long)
+    suspend fun getAll(): List<IdeaModel>
 }
 
 class IdeaRepositoryDb: IdeaRepository {
@@ -46,6 +47,10 @@ class IdeaRepositoryDb: IdeaRepository {
                 it[Ideas.dislikes] = dislikes.toSet().joinToString(",")
             }
         }
+    }
+
+    override suspend fun getAll(): List<IdeaModel> = dbQuery {
+        Ideas.selectAll().orderBy(Ideas.id to SortOrder.DESC).map { toIdeaModel(it) }
     }
 
     private fun toIdeaModel(row: ResultRow): IdeaModel =

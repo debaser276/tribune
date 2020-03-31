@@ -45,4 +45,16 @@ class IdeaService (
         val dislikes = voteRepo.getDislikesCount(id)
         return likes < 1 && dislikes > readerDislikes
     }
+
+    suspend fun getAll(): List<IdeaResponseDto> =
+        ideaRepo.getAll().map { IdeaResponseDto.fromModel(it) }
+
+    suspend fun getRecent(): List<IdeaResponseDto> =
+        getAll().take(resultSize)
+
+    suspend fun getBefore(id: Long): List<IdeaResponseDto> =
+        getAll().asSequence().filter { it.id < id }.take(resultSize).toList()
+
+    suspend fun getAfter(id: Long): List<IdeaResponseDto> =
+        getAll().asSequence().filter { it.id > id }.take(resultSize).toList()
 }

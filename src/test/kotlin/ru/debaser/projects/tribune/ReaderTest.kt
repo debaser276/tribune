@@ -14,25 +14,15 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
-class ApplicationTest {
-    private val jsonContentType = ContentType.Application.Json.withCharset(Charsets.UTF_8)
-    private val uploadPath = Files.createTempDirectory("test").toString()
-    private val configure: Application.() -> Unit = {
-        (environment.config as MapApplicationConfig).apply {
-            put("tribune.upload.dir", uploadPath)
-            put("tribune.jwt.secret", "2875f2518dd74feeb3260ebe1d24cb09")
-            put("tribune.db.jdbcUrl", "postgres://debaser:password@localhost:54321/test")
-            put("tribune.settings.reader-dislikes", "1")
-            put("tribune.settings.result-size", "2")
-        }
-        module()
-    }
+class ReaderTest {
+    val configure = Settings().configure
+    val jsonContentType = Settings().jsonContentType
 
     @Test
     fun testAuth() {
         withTestApplication(configure) {
             runBlocking {
-                regUser("user1")
+                regToken("user1")
                 var token: String?
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
@@ -49,16 +39,16 @@ class ApplicationTest {
     fun testReader() {
         withTestApplication(configure) {
             runBlocking {
-                val token2 = regUser("user2")
-                val token3 = regUser("user3")
-                val token4 = regUser("user4")
+                val token2 = regToken("user2")
+                val token3 = regToken("user3")
+                val token4 = regToken("user4")
                 handleRequest(HttpMethod.Post, "/api/v1/ideas") {
                     addHeader(HttpHeaders.Authorization, "Bearer $token2")
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"authorId": 2,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
                 }
-                vote("dislike", token3)
-                vote("dislike", token4)
+                vote("1", "dislike", token3)
+                vote("1", "dislike", token4)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user2","password": "Password"}""")
@@ -74,8 +64,8 @@ class ApplicationTest {
     fun testNotReader() {
         withTestApplication(configure) {
             runBlocking {
-                val token5 = regUser("user5")
-                vote("like", token5)
+                val token5 = regToken("user5")
+                vote("1", "like", token5)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user2","password": "Password"}""")
@@ -84,21 +74,6 @@ class ApplicationTest {
                     assertFalse(isReader)
                 }
             }
-        }
-    }
-
-    private fun TestApplicationEngine.regUser(username: String): String {
-        with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
-            addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-            setBody("""{"username": "$username","password": "Password"}""")
-        }) {
-            return JsonPath.read<String>(response.content!!, "$.token")
-        }
-    }
-
-    private fun TestApplicationEngine.vote(vote: String, token: String) {
-        handleRequest(HttpMethod.Put, "/api/v1/ideas/1/$vote") {
-            addHeader(HttpHeaders.Authorization, "Bearer $token")
         }
     }
 }
