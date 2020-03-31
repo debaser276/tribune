@@ -7,8 +7,8 @@ import org.junit.Test
 
 @KtorExperimentalAPI
 class IdeaTest {
-    val confiure = ReaderTest().configure
-    val jsonContentType = ReaderTest().jsonContentType
+    val confiure = Settings.configure
+    val jsonContentType = Settings.jsonContentType
 
     @Test
     fun ideas() {

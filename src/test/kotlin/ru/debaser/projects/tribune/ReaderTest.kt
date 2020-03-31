@@ -15,8 +15,8 @@ import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
 class ReaderTest {
-    val configure = Settings().configure
-    val jsonContentType = Settings().jsonContentType
+    val configure = Settings.configure
+    val jsonContentType = Settings.jsonContentType
 
     @Test
     fun testAuth() {

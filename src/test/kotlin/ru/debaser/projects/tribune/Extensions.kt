@@ -7,7 +7,7 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 
-val jsonContentType = Settings().jsonContentType
+val jsonContentType = Settings.jsonContentType
 
 fun TestApplicationEngine.regToken(username: String): String {
     with(handleRequest(HttpMethod.Post, "/api/v1/registration") {
