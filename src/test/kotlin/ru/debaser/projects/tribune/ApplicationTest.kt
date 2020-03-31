@@ -23,6 +23,7 @@ class ApplicationTest {
             put("tribune.jwt.secret", "2875f2518dd74feeb3260ebe1d24cb09")
             put("tribune.db.jdbcUrl", "postgres://debaser:password@localhost:54321/test")
             put("tribune.settings.reader-dislikes", "1")
+            put("tribune.settings.result-size", "2")
         }
         module()
     }

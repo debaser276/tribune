@@ -31,8 +31,11 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     environment.config.propertyOrNull("tribune.upload.dir")?.getString() ?:
                     throw ConfigurationException("Upload dir is not specified"))
             constant(tag = "reader-dislikes") with (
-                    environment.config.propertyOrNull("tribune.settings.reader-dislikes")?.getString() ?:
-                    throw ConfigurationException("Upload dir is not specified"))
+                    environment.config.propertyOrNull("tribune.settings.reader-dislikes")?.getString()?.toInt() ?:
+                    throw ConfigurationException("Reader dislikes is not specified"))
+            constant(tag = "result-size") with (
+                    environment.config.propertyOrNull("tribune.settings.result-size")?.getString()?.toInt() ?:
+                    throw ConfigurationException("Result size is not specified"))
             bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
             bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
             bind<RoutingV1>() with eagerSingleton {
@@ -56,7 +59,10 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                 IdeaService(
                     instance(),
                     instance(),
-                    instance(tag = "reader-dislikes")) }
+                    instance(tag = "reader-dislikes"),
+                    instance(tag = "result-size")
+                )
+            }
         }
     }
 }

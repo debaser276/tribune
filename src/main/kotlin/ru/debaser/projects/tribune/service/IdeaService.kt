@@ -13,10 +13,10 @@ import ru.debaser.projects.tribune.repository.VoteRepository
 class IdeaService (
     private val ideaRepo: IdeaRepository,
     private val voteRepo: VoteRepository,
-    private val readerDislikesStr: String
+    private val readerDislikes: Int,
+    private val resultSize: Int
 ) {
     private val mutex = Mutex()
-    private val readerDislikes = readerDislikesStr.toInt()
 
     suspend fun postIdea(idea: IdeaModel): Long =
         ideaRepo.postIdea(idea) ?: throw DatabaseException()
