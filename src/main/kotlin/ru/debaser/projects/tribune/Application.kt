@@ -23,18 +23,22 @@ fun main(args : Array<String>) {
 }
 
 fun Application.module() {
+
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
             serializeNulls()
         }
     }
+
     install(StatusPages) {
         ErrorHandler().setup(this)
     }
+
     install(KodeinFeature) {
         KodeinBuilder(environment).setup(this)
     }
+
     install(Authentication) {
         jwt {
             val jwtService by kodein().instance<JWTTokenService>()
@@ -47,6 +51,7 @@ fun Application.module() {
             }
         }
     }
+
     install(Routing) {
         val routingV1 by kodein().instance<RoutingV1>()
         routingV1.setup(this)
