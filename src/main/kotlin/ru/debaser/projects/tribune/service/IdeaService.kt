@@ -66,4 +66,11 @@ class IdeaService (
 
     suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
         getAll().asSequence().filter { it.authorId == authorId }.filter { it.id > id }.take(resultSize).toList()
+
+    suspend fun getAllVotes(ideaId: Long): List<VoteModel> =
+        voteRepo.getAll(ideaId)
+
+    suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteModel> =
+        getAllVotes(ideaId).asSequence().filter { it.id > voteId }.take(resultSize).toList()
+
 }

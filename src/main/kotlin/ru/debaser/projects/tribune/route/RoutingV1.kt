@@ -26,6 +26,9 @@ val <T: Any> PipelineContext<T, ApplicationCall>.id
 val <T: Any> PipelineContext<T, ApplicationCall>.authorId
     get() = call.parameters["authorId"]?.toLongOrNull() ?: throw ParameterConversionException("id", "Long")
 
+val <T: Any> PipelineContext<T, ApplicationCall>.ideaId
+    get() = call.parameters["ideaId"]?.toLongOrNull() ?: throw ParameterConversionException("id", "Long")
+
 val <T: Any> PipelineContext<T, ApplicationCall>.me
     get() = call.authentication.principal<UserModel>()
 
@@ -94,10 +97,19 @@ class RoutingV1(
                         get("/recent/{authorId}") {
                             call.respond(ideaService.getRecentByAuthor(authorId))
                         }
+                        get("/{id}/before/{authorId}") {
+                            call.respond(ideaService.getBeforeByAuthor(authorId, id))
+                        }
+                        get("/{id}/after/{authorId}") {
+                            call.respond(ideaService.getAfterByAuthor(authorId, id))
+                        }
                     }
                     route("/votes") {
-                        get {
-
+                        get("/{ideaId}") {
+                            call.respond(ideaService.getAllVotes(ideaId))
+                        }
+                        get("/{ideaId}/after/{id}") {
+                            call.respond(ideaService.getAfterVotes(ideaId, id))
                         }
                     }
                 }
