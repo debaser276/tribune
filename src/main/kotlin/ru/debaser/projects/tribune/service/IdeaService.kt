@@ -72,5 +72,4 @@ class IdeaService (
 
     suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteModel> =
         getAllVotes(ideaId).asSequence().filter { it.id > voteId }.take(resultSize).toList()
-
 }
