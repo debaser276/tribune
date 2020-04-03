@@ -11,19 +11,19 @@ import ru.debaser.projects.tribune.exception.*
 class ErrorHandler {
     fun setup(configuration: StatusPages.Configuration) {
         with (configuration) {
-            exception<LoginAlreadyExistsException>() {
+            exception<LoginAlreadyExistsException> {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Login already exists"))
             }
-            exception<DatabaseException>() {
+            exception<DatabaseException> {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Database exception"))
             }
-            exception<UserExistsException>() {
+            exception<UserExistsException> {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("User exists"))
             }
-            exception<UserNotFoundException>() {
+            exception<UserNotFoundException> {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Username not found"))
             }
-            exception<InvalidPasswordException>() {
+            exception<InvalidPasswordException> {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponseDto("Password invalid"))
             }
         }

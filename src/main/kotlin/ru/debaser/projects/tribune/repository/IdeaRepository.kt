@@ -11,6 +11,11 @@ interface IdeaRepository {
     suspend fun like(ideaId: Long, userId: Long)
     suspend fun dislike(ideaId: Long, userId: Long)
     suspend fun getAll(): List<IdeaModel>
+    suspend fun getBefore(id: Long): List<IdeaModel>
+    suspend fun getAfter(id: Long): List<IdeaModel>
+    suspend fun getRecentByAuthor(authorId: Long): List<IdeaModel>
+    suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaModel>
+    suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaModel>
 }
 
 class IdeaRepositoryDb: IdeaRepository {
@@ -50,8 +55,34 @@ class IdeaRepositoryDb: IdeaRepository {
     }
 
     override suspend fun getAll(): List<IdeaModel> = dbQuery {
-        Ideas.selectAll().orderBy(Ideas.id to SortOrder.DESC).map { toIdeaModel(it) }
-    }
+        Ideas.selectAll()
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
+
+    override suspend fun getBefore(id: Long): List<IdeaModel> = dbQuery {
+        Ideas.select { Ideas.id less id }
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
+
+    override suspend fun getAfter(id: Long): List<IdeaModel> = dbQuery {
+        Ideas.select { Ideas.id greater id }
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
+
+    override suspend fun getRecentByAuthor(authorId: Long): List<IdeaModel> = dbQuery {
+        Ideas.select { Ideas.authorId eq authorId }
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
+
+    override suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaModel> = dbQuery {
+        Ideas.select { (Ideas.authorId eq authorId) and (Ideas.id less id) }
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
+
+    override suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaModel> = dbQuery {
+        Ideas.select { (Ideas.authorId eq authorId) and (Ideas.id greater id) }
+            .orderBy(Ideas.id to SortOrder.DESC)
+            .map { toIdeaModel(it) } }
 
     private fun toIdeaModel(row: ResultRow): IdeaModel =
         IdeaModel(

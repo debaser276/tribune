@@ -1,22 +1,19 @@
 package ru.debaser.projects.tribune
 
 import com.jayway.jsonpath.JsonPath
-import io.ktor.application.Application
-import io.ktor.config.MapApplicationConfig
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
-import java.nio.file.Files
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @KtorExperimentalAPI
 class ReaderTest {
-    val configure = Settings.configure
-    val jsonContentType = Settings.jsonContentType
+    private val configure = Settings.configure
+    private val jsonContentType = Settings.jsonContentType
 
     @Test
     fun testAuth() {

@@ -10,6 +10,7 @@ interface VoteRepository {
     suspend fun getLikesCount(ideaId: Long): Int
     suspend fun getDislikesCount(ideaId: Long): Int
     suspend fun getAll(ideaId: Long): List<VoteModel>
+    suspend fun getAfter(ideaId: Long, id: Long): List<VoteModel>
 }
 
 class VoteRepositoryDb: VoteRepository {
@@ -33,6 +34,12 @@ class VoteRepositoryDb: VoteRepository {
     override suspend fun getAll(ideaId: Long): List<VoteModel> = dbQuery {
         Votes
             .select { Votes.ideaId eq ideaId }
+            .orderBy(Votes.created to SortOrder.DESC)
+            .map { toVoteModel(it) }
+    }
+
+    override suspend fun getAfter(ideaId: Long, id: Long): List<VoteModel> = dbQuery {
+        Votes.select { (Votes.ideaId eq ideaId) and (Votes.id greater id) }
             .orderBy(Votes.created to SortOrder.DESC)
             .map { toVoteModel(it) }
     }

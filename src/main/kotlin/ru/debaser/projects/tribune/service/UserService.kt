@@ -1,7 +1,5 @@
 package ru.debaser.projects.tribune.service
 
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import org.springframework.security.crypto.password.PasswordEncoder
 import ru.debaser.projects.tribune.repository.UserRepository
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto

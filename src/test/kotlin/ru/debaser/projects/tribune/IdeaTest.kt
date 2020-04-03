@@ -7,12 +7,11 @@ import org.junit.Test
 
 @KtorExperimentalAPI
 class IdeaTest {
-    val confiure = Settings.configure
-    val jsonContentType = Settings.jsonContentType
+    private val configure = Settings.configure
 
     @Test
     fun ideas() {
-        withTestApplication(confiure) {
+        withTestApplication(configure) {
             runBlocking {
                 val token1 = authToken("user1")
                 val token2 = authToken("user2")

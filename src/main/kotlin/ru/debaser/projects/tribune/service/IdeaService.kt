@@ -16,6 +16,9 @@ class IdeaService (
     private val readerDislikes: Int,
     private val resultSize: Int
 ) {
+    private fun List<IdeaModel>.toIdeaResponseDto() =
+        this.take(resultSize).map { IdeaResponseDto.fromModel(it) }
+
     private val mutex = Mutex()
 
     suspend fun postIdea(idea: IdeaModel): Long =
@@ -46,30 +49,27 @@ class IdeaService (
         return likes < 1 && dislikes > readerDislikes
     }
 
-    suspend fun getAll(): List<IdeaResponseDto> =
-        ideaRepo.getAll().map { IdeaResponseDto.fromModel(it) }
-
     suspend fun getRecent(): List<IdeaResponseDto> =
-        getAll().take(resultSize)
+        ideaRepo.getAll().toIdeaResponseDto()
 
     suspend fun getBefore(id: Long): List<IdeaResponseDto> =
-        getAll().asSequence().filter { it.id < id }.take(resultSize).toList()
+        ideaRepo.getBefore(id).toIdeaResponseDto()
 
     suspend fun getAfter(id: Long): List<IdeaResponseDto> =
-        getAll().asSequence().filter { it.id > id }.take(resultSize).toList()
+        ideaRepo.getAfter(id).toIdeaResponseDto()
 
     suspend fun getRecentByAuthor(authorId: Long): List<IdeaResponseDto> =
-        getAll().asSequence().filter { it.authorId == authorId }.take(resultSize).toList()
+        ideaRepo.getRecentByAuthor(authorId).toIdeaResponseDto()
 
     suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
-        getAll().asSequence().filter { it.authorId == authorId }.filter { it.id < id }.take(resultSize).toList()
+        ideaRepo.getBeforeByAuthor(authorId, id).toIdeaResponseDto()
 
     suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
-        getAll().asSequence().filter { it.authorId == authorId }.filter { it.id > id }.take(resultSize).toList()
+        ideaRepo.getAfterByAuthor(authorId, id).toIdeaResponseDto()
 
     suspend fun getAllVotes(ideaId: Long): List<VoteModel> =
         voteRepo.getAll(ideaId)
 
     suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteModel> =
-        getAllVotes(ideaId).asSequence().filter { it.id > voteId }.take(resultSize).toList()
+        voteRepo.getAfter(ideaId, voteId).take(resultSize).toList()
 }
