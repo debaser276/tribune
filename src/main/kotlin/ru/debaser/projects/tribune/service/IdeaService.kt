@@ -16,22 +16,20 @@ class IdeaService (
     private val readerDislikes: Int,
     private val resultSize: Int
 ) {
-    private fun List<IdeaModel>.toIdeaResponseDto() =
-        this.take(resultSize).map { IdeaResponseDto.fromModel(it) }
 
     private val mutex = Mutex()
 
+    suspend fun getById(id: Long): IdeaResponseDto =
+        ideaRepo.getById(id) ?: throw IdeaNotFoundException()
+
     suspend fun postIdea(idea: IdeaModel): Long =
         ideaRepo.postIdea(idea) ?: throw DatabaseException()
-
-    suspend fun getById(id: Long): IdeaModel =
-        ideaRepo.getById(id) ?: throw IdeaNotFoundException()
 
     suspend fun like(ideaId: Long, userId: Long): IdeaResponseDto {
         mutex.withLock {
             ideaRepo.like(ideaId, userId)
             voteRepo.addVote(userId, ideaId, true)
-            return IdeaResponseDto.fromModel(getById(ideaId))
+            return getById(ideaId)
         }
     }
 
@@ -39,7 +37,7 @@ class IdeaService (
         mutex.withLock {
             ideaRepo.dislike(ideaId, userId)
             voteRepo.addVote(userId, ideaId, false)
-            return IdeaResponseDto.fromModel(getById(ideaId))
+            return getById(ideaId)
         }
     }
 
@@ -50,22 +48,22 @@ class IdeaService (
     }
 
     suspend fun getRecent(): List<IdeaResponseDto> =
-        ideaRepo.getAll().toIdeaResponseDto()
+        ideaRepo.getAll().take(resultSize)
 
     suspend fun getBefore(id: Long): List<IdeaResponseDto> =
-        ideaRepo.getBefore(id).toIdeaResponseDto()
+        ideaRepo.getBefore(id).take(resultSize)
 
     suspend fun getAfter(id: Long): List<IdeaResponseDto> =
-        ideaRepo.getAfter(id).toIdeaResponseDto()
+        ideaRepo.getAfter(id).take(resultSize)
 
     suspend fun getRecentByAuthor(authorId: Long): List<IdeaResponseDto> =
-        ideaRepo.getRecentByAuthor(authorId).toIdeaResponseDto()
+        ideaRepo.getRecentByAuthor(authorId).take(resultSize)
 
     suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
-        ideaRepo.getBeforeByAuthor(authorId, id).toIdeaResponseDto()
+        ideaRepo.getBeforeByAuthor(authorId, id).take(resultSize)
 
     suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
-        ideaRepo.getAfterByAuthor(authorId, id).toIdeaResponseDto()
+        ideaRepo.getAfterByAuthor(authorId, id).take(resultSize)
 
     suspend fun getAllVotes(ideaId: Long): List<VoteModel> =
         voteRepo.getAll(ideaId)

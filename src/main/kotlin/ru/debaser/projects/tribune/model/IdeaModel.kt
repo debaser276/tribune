@@ -3,7 +3,6 @@ package ru.debaser.projects.tribune.model
 data class IdeaModel(
     val id: Long,
     val authorId: Long,
-    val author: String? = null,
     val created: Long,
     val content: String,
     val media: String,
