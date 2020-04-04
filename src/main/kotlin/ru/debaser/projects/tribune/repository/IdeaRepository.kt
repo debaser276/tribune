@@ -2,6 +2,7 @@ package ru.debaser.projects.tribune.repository
 
 import org.jetbrains.exposed.sql.*
 import ru.debaser.projects.tribune.db.data.idea.Ideas
+import ru.debaser.projects.tribune.db.data.user.Users
 import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.model.IdeaModel
 
@@ -31,7 +32,7 @@ class IdeaRepositoryDb: IdeaRepository {
     }
 
     override suspend fun getById(id: Long): IdeaModel? = dbQuery {
-        Ideas.select { Ideas.id eq id }.map { toIdeaModel(it) }.singleOrNull()
+        (Ideas innerJoin Users).select { Ideas.id eq id }.map { toIdeaModel(it) }.singleOrNull()
     }
 
     override suspend fun like(ideaId: Long, userId: Long) {
@@ -55,32 +56,32 @@ class IdeaRepositoryDb: IdeaRepository {
     }
 
     override suspend fun getAll(): List<IdeaModel> = dbQuery {
-        Ideas.selectAll()
+        (Ideas innerJoin Users).selectAll()
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
     override suspend fun getBefore(id: Long): List<IdeaModel> = dbQuery {
-        Ideas.select { Ideas.id less id }
+        (Ideas innerJoin Users).select { Ideas.id less id }
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
     override suspend fun getAfter(id: Long): List<IdeaModel> = dbQuery {
-        Ideas.select { Ideas.id greater id }
+        (Ideas innerJoin Users).select { Ideas.id greater id }
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
     override suspend fun getRecentByAuthor(authorId: Long): List<IdeaModel> = dbQuery {
-        Ideas.select { Ideas.authorId eq authorId }
+        (Ideas innerJoin Users).select { Ideas.authorId eq authorId }
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
     override suspend fun getBeforeByAuthor(authorId: Long, id: Long): List<IdeaModel> = dbQuery {
-        Ideas.select { (Ideas.authorId eq authorId) and (Ideas.id less id) }
+        (Ideas innerJoin Users).select { (Ideas.authorId eq authorId) and (Ideas.id less id) }
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
     override suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaModel> = dbQuery {
-        Ideas.select { (Ideas.authorId eq authorId) and (Ideas.id greater id) }
+        (Ideas innerJoin Users).select { (Ideas.authorId eq authorId) and (Ideas.id greater id) }
             .orderBy(Ideas.id to SortOrder.DESC)
             .map { toIdeaModel(it) } }
 
@@ -88,6 +89,7 @@ class IdeaRepositoryDb: IdeaRepository {
         IdeaModel(
             id = row[Ideas.id],
             authorId = row[Ideas.authorId],
+            author = row[Users.username],
             created = row[Ideas.created],
             content = row[Ideas.content],
             media = row[Ideas.media],

@@ -5,6 +5,7 @@ import ru.debaser.projects.tribune.model.IdeaModel
 data class IdeaResponseDto(
     val id: Long,
     val authorId: Long,
+    val author: String?,
     val created: Long,
     val content: String,
     val media: String,
@@ -16,6 +17,7 @@ data class IdeaResponseDto(
         fun fromModel(idea: IdeaModel) = IdeaResponseDto(
             id = idea.id,
             authorId = idea.authorId,
+            author = idea.author,
             created = idea.created,
             content = idea.content,
             media = idea.media,
