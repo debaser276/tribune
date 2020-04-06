@@ -4,11 +4,12 @@ import org.jetbrains.exposed.sql.*
 import ru.debaser.projects.tribune.db.data.idea.Ideas
 import ru.debaser.projects.tribune.db.data.user.Users
 import ru.debaser.projects.tribune.db.dbQuery
+import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.dto.IdeaResponseDto
 import ru.debaser.projects.tribune.model.IdeaModel
 
 interface IdeaRepository {
-    suspend fun postIdea(idea: IdeaModel): Long?
+    suspend fun postIdea(userId: Long, ideaRequestDto: IdeaRequestDto): Long?
     suspend fun getById(id: Long): IdeaResponseDto?
     suspend fun like(ideaId: Long, userId: Long)
     suspend fun dislike(ideaId: Long, userId: Long)
@@ -22,13 +23,13 @@ interface IdeaRepository {
 
 class IdeaRepositoryDb: IdeaRepository {
 
-    override suspend fun postIdea(idea: IdeaModel): Long? = dbQuery {
+    override suspend fun postIdea(userId: Long, ideaRequestDto: IdeaRequestDto): Long? = dbQuery {
         Ideas.insert {
-            it[authorId] = idea.authorId
+            it[authorId] = userId
             it[created] = System.currentTimeMillis() / 1000
-            it[content] = idea.content
-            it[media] = idea.media
-            it[link] = idea.link
+            it[content] = ideaRequestDto.content
+            it[media] = ideaRequestDto.media
+            it[link] = ideaRequestDto.link
         }[Ideas.id]
     }
 

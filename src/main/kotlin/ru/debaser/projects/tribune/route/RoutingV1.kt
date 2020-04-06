@@ -14,6 +14,7 @@ import io.ktor.routing.*
 import io.ktor.util.pipeline.PipelineContext
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
+import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.model.IdeaModel
 import ru.debaser.projects.tribune.model.UserModel
 import ru.debaser.projects.tribune.service.FileService
@@ -65,8 +66,8 @@ class RoutingV1(
                     }
                     route("/ideas") {
                         post {
-                            val input = call.receive<IdeaModel>()
-                            val id = ideaService.postIdea(input)
+                            val input = call.receive<IdeaRequestDto>()
+                            val id = ideaService.postIdea(me!!.id, input)
                             call.respond(ideaService.getById(id))
                         }
                         put("/{id}/like") {

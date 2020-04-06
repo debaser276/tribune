@@ -2,6 +2,7 @@ package ru.debaser.projects.tribune.service
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.dto.IdeaResponseDto
 import ru.debaser.projects.tribune.exception.DatabaseException
 import ru.debaser.projects.tribune.exception.IdeaNotFoundException
@@ -22,8 +23,8 @@ class IdeaService (
     suspend fun getById(id: Long): IdeaResponseDto =
         ideaRepo.getById(id) ?: throw IdeaNotFoundException()
 
-    suspend fun postIdea(idea: IdeaModel): Long =
-        ideaRepo.postIdea(idea) ?: throw DatabaseException()
+    suspend fun postIdea(userId: Long, ideaRequestDto: IdeaRequestDto): Long =
+        ideaRepo.postIdea(userId, ideaRequestDto) ?: throw DatabaseException()
 
     suspend fun like(ideaId: Long, userId: Long): IdeaResponseDto {
         mutex.withLock {
