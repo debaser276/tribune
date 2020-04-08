@@ -10,7 +10,7 @@ object Ideas : Table() {
     val created: Column<Long> = long("created")
     val content: Column<String> = text("content")
     val media: Column<String> = text("media")
-    val link: Column<String?> = text("link").nullable()
+    val link: Column<String> = text("link").default("")
     val likes: Column<String> = text("likes").default("")
     val dislikes: Column<String> = text("dislikes").default("")
 }

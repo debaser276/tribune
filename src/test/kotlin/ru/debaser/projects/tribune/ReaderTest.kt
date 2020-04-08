@@ -42,7 +42,7 @@ class ReaderTest {
                 handleRequest(HttpMethod.Post, "/api/v1/ideas") {
                     addHeader(HttpHeaders.Authorization, "Bearer $token2")
                     addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-                    setBody("""{"authorId": 2,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
+                    setBody("""{"authorId": 2,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg","link":""}""")
                 }
                 vote("1", "dislike", token3)
                 vote("1", "dislike", token4)
