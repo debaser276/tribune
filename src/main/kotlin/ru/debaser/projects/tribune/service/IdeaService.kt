@@ -4,6 +4,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.dto.IdeaResponseDto
+import ru.debaser.projects.tribune.dto.VoteResponseDto
 import ru.debaser.projects.tribune.exception.DatabaseException
 import ru.debaser.projects.tribune.exception.IdeaNotFoundException
 import ru.debaser.projects.tribune.model.IdeaModel
@@ -66,9 +67,9 @@ class IdeaService (
     suspend fun getAfterByAuthor(authorId: Long, id: Long): List<IdeaResponseDto> =
         ideaRepo.getAfterByAuthor(authorId, id).take(resultSize)
 
-    suspend fun getAllVotes(ideaId: Long): List<VoteModel> =
+    suspend fun getAllVotes(ideaId: Long): List<VoteResponseDto> =
         voteRepo.getAll(ideaId)
 
-    suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteModel> =
+    suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteResponseDto> =
         voteRepo.getAfter(ideaId, voteId).take(resultSize).toList()
 }
