@@ -15,13 +15,14 @@ interface UserRepository {
 
 class UserRepositoryDb: UserRepository {
 
-    override suspend fun save(item: UserModel): Long? = dbQuery {
+    override suspend fun save(user: UserModel): Long? = dbQuery {
         Users.insert {
-            it[username] = item.username
-            it[password] = item.password
-            it[isHater] = item.isHater
-            it[isPromoter] = item.isPromoter
-            it[isReader] = item.isReader
+            it[username] = user.username
+            it[password] = user.password
+            it[isHater] = user.isHater
+            it[isPromoter] = user.isPromoter
+            it[isReader] = user.isReader
+            it[avatar] = user.avatar
         }[Users.id]
     }
 
@@ -51,6 +52,7 @@ class UserRepositoryDb: UserRepository {
             password = row[Users.password],
             isHater = row[Users.isHater],
             isPromoter = row[Users.isPromoter],
-            isReader = row[Users.isReader]
+            isReader = row[Users.isReader],
+            avatar = row[Users.avatar]
         )
 }

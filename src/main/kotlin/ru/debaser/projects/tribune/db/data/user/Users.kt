@@ -10,4 +10,5 @@ object Users : Table() {
     val isHater: Column<Boolean> = bool("is_hater")
     val isPromoter: Column<Boolean> = bool("is_promoter")
     val isReader: Column<Boolean> = bool("is_reader")
+    val avatar: Column<String> = text("avatar").default("")
 }

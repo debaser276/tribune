@@ -8,5 +8,6 @@ data class UserModel(
     val password: String,
     val isHater: Boolean = false,
     val isPromoter: Boolean = false,
-    val isReader: Boolean = false
+    val isReader: Boolean = false,
+    val avatar: String = ""
 ): Principal
