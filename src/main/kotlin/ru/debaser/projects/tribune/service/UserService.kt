@@ -44,4 +44,6 @@ class UserService (
     suspend fun reader(id: Long, set: Boolean) = repo.reader(id, set)
 
     suspend fun isReader(id: Long) = repo.isReader(id)
+
+    suspend fun addAvatar(id: Long, imageId: String) = repo.addAvatar(id, imageId)
 }

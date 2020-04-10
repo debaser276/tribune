@@ -51,6 +51,7 @@ class VoteRepositoryDb: VoteRepository {
             authorId = row[Votes.authorId],
             isHater = row[Users.isHater],
             isPromoter = row[Users.isPromoter],
+            avatar = row[Users.avatar],
             ideaId = row[Votes.ideaId],
             created = row[Votes.created],
             isUp = row[Votes.isUp]

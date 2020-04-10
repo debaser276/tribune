@@ -11,6 +11,7 @@ interface UserRepository {
     suspend fun getByUsername(username: String): UserModel?
     suspend fun reader(id: Long, set: Boolean)
     suspend fun isReader(id: Long): Boolean
+    suspend fun addAvatar(id: Long, avatar: String)
 }
 
 class UserRepositoryDb: UserRepository {
@@ -43,6 +44,10 @@ class UserRepositoryDb: UserRepository {
 
     override suspend fun isReader(id: Long): Boolean = dbQuery {
         Users.select { Users.id eq id }.map { toUserModel(it) }.single().isReader
+    }
+
+    override suspend fun addAvatar(id: Long, imageId: String) {
+        dbQuery { Users.update({ Users.id eq id }) { it[Users.avatar] = imageId } }
     }
 
     private fun toUserModel(row: ResultRow): UserModel =

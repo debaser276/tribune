@@ -16,6 +16,7 @@ import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.model.IdeaModel
+import ru.debaser.projects.tribune.model.MediaModel
 import ru.debaser.projects.tribune.model.UserModel
 import ru.debaser.projects.tribune.service.FileService
 import ru.debaser.projects.tribune.service.IdeaService
@@ -62,6 +63,12 @@ class RoutingV1(
                             val multipart = call.receiveMultipart()
                             val response = fileService.save(multipart)
                             call.respond(response)
+                        }
+                    }
+                    route("/avatar") {
+                        post {
+                            val image = call.receive<MediaModel>()
+                            userService.addAvatar(me!!.id, image.id)
                         }
                     }
                     route("/ideas") {

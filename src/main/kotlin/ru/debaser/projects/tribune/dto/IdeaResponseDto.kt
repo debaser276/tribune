@@ -6,6 +6,7 @@ data class IdeaResponseDto(
     val author: String,
     val isHater: Boolean,
     val isPromoter: Boolean,
+    val avatar: String,
     val created: Long,
     val content: String,
     val media: String,

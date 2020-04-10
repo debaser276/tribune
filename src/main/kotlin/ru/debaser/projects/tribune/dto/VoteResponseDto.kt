@@ -5,6 +5,7 @@ data class VoteResponseDto(
     val authorId: Long,
     val isHater: Boolean,
     val isPromoter: Boolean,
+    val avatar: String,
     val ideaId: Long,
     val created: Long,
     val isUp: Boolean

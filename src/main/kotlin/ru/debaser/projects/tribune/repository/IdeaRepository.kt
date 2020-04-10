@@ -98,6 +98,7 @@ class IdeaRepositoryDb: IdeaRepository {
             author = row[Users.username],
             isHater = row[Users.isHater],
             isPromoter = row[Users.isPromoter],
+            avatar = row[Users.avatar],
             created = row[Ideas.created],
             content = row[Ideas.content],
             media = row[Ideas.media],
