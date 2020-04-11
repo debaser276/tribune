@@ -49,6 +49,7 @@ class VoteRepositoryDb: VoteRepository {
         VoteResponseDto(
             id = row[Votes.id],
             authorId = row[Votes.authorId],
+            author = row[Users.username],
             isHater = row[Users.isHater],
             isPromoter = row[Users.isPromoter],
             avatar = row[Users.avatar],

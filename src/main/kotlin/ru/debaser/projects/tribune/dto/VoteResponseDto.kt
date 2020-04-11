@@ -3,6 +3,7 @@ package ru.debaser.projects.tribune.dto
 data class VoteResponseDto(
     val id: Long,
     val authorId: Long,
+    val author: String,
     val isHater: Boolean,
     val isPromoter: Boolean,
     val avatar: String,
