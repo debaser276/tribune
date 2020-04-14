@@ -47,7 +47,7 @@ class UserRepositoryDb: UserRepository {
     }
 
     override suspend fun addAvatar(id: Long, imageId: String) {
-        dbQuery { Users.update({ Users.id eq id }) { it[Users.avatar] = imageId } }
+        dbQuery { Users.update({ Users.id eq id }) { it[avatar] = imageId } }
     }
 
     private fun toUserModel(row: ResultRow): UserModel =

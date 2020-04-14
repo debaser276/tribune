@@ -26,17 +26,32 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     throw ConfigurationException("JWT secret is not specified"))
             constant(tag = "jdbc-url") with (
                     environment.config.propertyOrNull("tribune.db.jdbcUrl")?.getString() ?:
-                    throw ConfigurationException("Jdbc url is not specified"))
+                    throw ConfigurationException("JdbcUrl is not specified"))
             constant(tag = "upload-dir") with (
                     environment.config.propertyOrNull("tribune.upload.dir")?.getString() ?:
                     throw ConfigurationException("Upload dir is not specified"))
             constant(tag = "reader-dislikes") with (
                     environment.config.propertyOrNull("tribune.settings.reader-dislikes")?.getString()?.toInt() ?:
-                    throw ConfigurationException("Reader dislikes is not specified"))
+                    throw ConfigurationException("Reader-dislikes is not specified"))
             constant(tag = "result-size") with (
                     environment.config.propertyOrNull("tribune.settings.result-size")?.getString()?.toInt() ?:
-                    throw ConfigurationException("Result size is not specified"))
-            bind<FileService>() with eagerSingleton { FileService(instance(tag = "upload-dir")) }
+                    throw ConfigurationException("Result-size is not specified"))
+            constant(tag = "cloud-name") with (
+                    environment.config.propertyOrNull("tribune.cloudinary.cloud-name")?.getString() ?:
+                    throw ConfigurationException("Cloud-name is not specified"))
+            constant(tag = "api-key") with (
+                    environment.config.propertyOrNull("tribune.cloudinary.api-key")?.getString() ?:
+                    throw ConfigurationException("Api-key is not specified"))
+            constant(tag = "api-secret") with (
+                    environment.config.propertyOrNull("tribune.cloudinary.api-secret")?.getString() ?:
+                    throw ConfigurationException("Api-secret is not specified"))
+            bind<FileService>() with eagerSingleton {
+                FileService(
+                    instance(tag = "upload-dir"),
+                    instance(tag = "cloud-name"),
+                    instance(tag = "api-key"),
+                    instance(tag = "api-secret")
+                ) }
             bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(

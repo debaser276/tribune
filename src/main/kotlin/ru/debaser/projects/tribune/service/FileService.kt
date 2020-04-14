@@ -1,5 +1,7 @@
 package ru.debaser.projects.tribune.service
 
+import com.cloudinary.Cloudinary
+import com.cloudinary.utils.ObjectUtils
 import io.ktor.features.BadRequestException
 import io.ktor.features.UnsupportedMediaTypeException
 import io.ktor.http.ContentType
@@ -13,14 +15,26 @@ import ru.debaser.projects.tribune.model.MediaModel
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
+import kotlin.collections.HashMap
 
-class FileService(private val uploadPath: String) {
+class FileService(
+    private val uploadPath: String,
+    cloudName: String,
+    apiKey: String,
+    apiSecret: String
+) {
     private val images = listOf(ContentType.Image.JPEG, ContentType.Image.PNG)
+    private val cloudinary: Cloudinary
 
     init {
         if (Files.notExists(Paths.get(uploadPath))) {
             Files.createDirectory(Paths.get(uploadPath))
         }
+        val config = HashMap<String, String>()
+        config["cloud_name"] = cloudName
+        config["api_key"] = apiKey
+        config["api_secret"] = apiSecret
+        cloudinary = Cloudinary(config)
     }
 
     suspend fun save(multipart: MultiPartData): MediaModel {
@@ -45,7 +59,10 @@ class FileService(private val uploadPath: String) {
                             }
                         }
                         part.dispose()
-                        response = MediaModel(name)
+                        withContext(Dispatchers.IO) {
+                            val cloudUrl = cloudinary.uploader().upload(path.toString(), ObjectUtils.emptyMap())["url"]
+                            response = MediaModel(cloudUrl.toString())
+                        }
                         return@forEachPart
                     }
                 }

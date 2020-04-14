@@ -15,7 +15,6 @@ import io.ktor.util.pipeline.PipelineContext
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
-import ru.debaser.projects.tribune.model.IdeaModel
 import ru.debaser.projects.tribune.model.MediaModel
 import ru.debaser.projects.tribune.model.UserModel
 import ru.debaser.projects.tribune.service.FileService

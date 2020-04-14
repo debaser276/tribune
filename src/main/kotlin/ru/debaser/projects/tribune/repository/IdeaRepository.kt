@@ -6,7 +6,6 @@ import ru.debaser.projects.tribune.db.data.user.Users
 import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
 import ru.debaser.projects.tribune.dto.IdeaResponseDto
-import ru.debaser.projects.tribune.model.IdeaModel
 
 interface IdeaRepository {
     suspend fun postIdea(userId: Long, ideaRequestDto: IdeaRequestDto): Long?

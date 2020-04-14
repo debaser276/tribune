@@ -5,7 +5,6 @@ import ru.debaser.projects.tribune.db.data.user.Users
 import ru.debaser.projects.tribune.db.data.vote.Votes
 import ru.debaser.projects.tribune.db.dbQuery
 import ru.debaser.projects.tribune.dto.VoteResponseDto
-import ru.debaser.projects.tribune.model.VoteModel
 
 interface VoteRepository {
     suspend fun addVote(authorId: Long, ideaId: Long, isUp: Boolean): Long?
