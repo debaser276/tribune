@@ -45,9 +45,13 @@ class UserService (
 
     suspend fun isReader(id: Long) = repo.isReader(id)
 
-    suspend fun setHater(id: Long, set: Boolean) = repo.setHater(id, set)
+    suspend fun isPromoter(id: Long) = repo.isPromoter(id)
 
     suspend fun setPromoter(id: Long, set: Boolean) = repo.setPromoter(id, set)
+
+    suspend fun isHater(id: Long) = repo.isHater(id)
+
+    suspend fun setHater(id: Long, set: Boolean) = repo.setHater(id, set)
 
     suspend fun addAvatar(id: Long, imageId: String) = repo.addAvatar(id, imageId)
 }

@@ -51,7 +51,10 @@ class VoteRepositoryDb: VoteRepository {
     }
 
     override suspend fun getTop(num: Int, isUp: Boolean): List<Long> = dbQuery {
-        Votes.slice(Votes.authorId).select { Votes.isUp eq isUp }.groupBy(Votes.authorId).orderBy(Votes.authorId.count()).limit(num).map { it[Votes.authorId] }
+        Votes.slice(Votes.authorId).select { Votes.isUp eq isUp }
+            .groupBy(Votes.authorId)
+            .orderBy(Votes.authorId.count() to SortOrder.DESC)
+            .limit(num).map { it[Votes.authorId] }
     }
 
     private fun toVoteResponseDto(row: ResultRow): VoteResponseDto =

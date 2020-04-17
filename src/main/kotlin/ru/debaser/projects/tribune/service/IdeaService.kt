@@ -72,14 +72,14 @@ class IdeaService (
     suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteResponseDto> =
         voteRepo.getAfter(ideaId, voteId).take(resultSize).toList()
 
-    suspend fun isPromoter(authorId: Long): Boolean {
+    suspend fun isGetPromoter(authorId: Long): Boolean {
         val likes = voteRepo.getAuthorVotesCount(authorId, true)
         val dislikes = voteRepo.getAuthorVotesCount(authorId, false)
         val topPromoters = voteRepo.getTop(topBadge, true)
         return topPromoters.contains(authorId) || likes > dislikes * 2 || likes > 100
     }
 
-    suspend fun isHater(authorId: Long): Boolean {
+    suspend fun isGetHater(authorId: Long): Boolean {
         val likes = voteRepo.getAuthorVotesCount(authorId, true)
         val dislikes = voteRepo.getAuthorVotesCount(authorId, false)
         val topHaters = voteRepo.getTop(topBadge, false)

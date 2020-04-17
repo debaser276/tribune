@@ -11,8 +11,10 @@ interface UserRepository {
     suspend fun getByUsername(username: String): UserModel?
     suspend fun setReader(id: Long, set: Boolean)
     suspend fun isReader(id: Long): Boolean
-    suspend fun setHater(id: Long, set: Boolean)
+    suspend fun isPromoter(id: Long): Boolean
     suspend fun setPromoter(id: Long, set: Boolean)
+    suspend fun isHater(id: Long): Boolean
+    suspend fun setHater(id: Long, set: Boolean)
     suspend fun addAvatar(id: Long, avatar: String)
 }
 
@@ -36,33 +38,26 @@ class UserRepositoryDb: UserRepository {
         Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
     }
 
-    override suspend fun setReader(id: Long, set: Boolean) {
-        dbQuery {
-            Users.update({ Users.id eq id }) {
-                it[isReader] = set
-            }
-        }
-    }
+    override suspend fun setReader(id: Long, set: Boolean) { dbQuery {
+        Users.update({ Users.id eq id }) {
+            it[isReader] = set } } }
 
     override suspend fun isReader(id: Long): Boolean = dbQuery {
-        Users.select { Users.id eq id }.map { toUserModel(it) }.single().isReader
-    }
+        Users.select { Users.id eq id }.single()[Users.isReader] }
 
-    override suspend fun setHater(id: Long, set: Boolean) {
-        dbQuery {
-            Users.update({ Users.id eq id }) {
-                it[isHater] = set
-            }
-        }
-    }
+    override suspend fun isPromoter(id: Long): Boolean = dbQuery {
+        Users.select { Users.id eq id }.single()[Users.isPromoter] }
 
-    override suspend fun setPromoter(id: Long, set: Boolean) {
-        dbQuery {
-            Users.update({ Users.id eq id }) {
-                it[isPromoter] = set
-            }
-        }
-    }
+    override suspend fun setPromoter(id: Long, set: Boolean) { dbQuery {
+        Users.update({ Users.id eq id }) {
+            it[isPromoter] = set } } }
+
+    override suspend fun isHater(id: Long): Boolean = dbQuery {
+        Users.select { Users.id eq id }.single()[Users.isHater] }
+
+    override suspend fun setHater(id: Long, set: Boolean) { dbQuery {
+        Users.update({ Users.id eq id }) {
+            it[isHater] = set } } }
 
     override suspend fun addAvatar(id: Long, avatar: String) {
         dbQuery { Users.update({ Users.id eq id }) { it[this.avatar] = avatar } }

@@ -19,10 +19,14 @@ class Settings {
             (environment.config as MapApplicationConfig).apply {
                 put("tribune.upload.dir", uploadPath)
                 put("tribune.jwt.secret", "2875f2518dd74feeb3260ebe1d24cb09")
-                put("tribune.db.jdbcUrl", "postgres://debaser:password@localhost:54321/test")
-//                put("tribune.db.jdbcUrl", "postgres://${postgresContainer.username}:${postgresContainer.password}@${postgresContainer.containerIpAddress}:${postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgresContainer.databaseName}")
+//                put("tribune.db.jdbcUrl", "postgres://debaser:password@localhost:54321/test")
+                put("tribune.db.jdbcUrl", "postgres://${postgresContainer.username}:${postgresContainer.password}@${postgresContainer.containerIpAddress}:${postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgresContainer.databaseName}")
                 put("tribune.settings.reader-dislikes", "1")
                 put("tribune.settings.result-size", "20")
+                put("tribune.settings.top-badge", "1")
+                put("tribune.cloudinary.cloud-name", "")
+                put("tribune.cloudinary.api-key", "")
+                put("tribune.cloudinary.api-secret", "")
             }
             module()
         }

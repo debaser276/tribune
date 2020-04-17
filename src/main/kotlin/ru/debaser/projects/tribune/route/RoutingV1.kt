@@ -82,11 +82,7 @@ class RoutingV1(
                             if (!ideaService.isReaderEnough(id) && userService.isReader(authorId)) {
                                 userService.setReader(authorId, false)
                             }
-                            if (ideaService.isPromoter(authorId)) {
-                                userService.setPromoter(authorId, true)
-                            } else {
-                                userService.setPromoter(authorId, false)
-                            }
+                            setBadges(me!!.id)
                             call.respond(response)
                         }
                         put("/{id}/dislike") {
@@ -95,11 +91,7 @@ class RoutingV1(
                             if (ideaService.isReaderEnough(id) && !userService.isReader(authorId)) {
                                 userService.setReader(authorId, true)
                             }
-                            if (ideaService.isHater(authorId)) {
-                                userService.setHater(authorId, true)
-                            } else {
-                                userService.setHater(authorId, false)
-                            }
+                            setBadges(me!!.id)
                             call.respond(response)
                         }
                         get("/recent") {
@@ -131,6 +123,17 @@ class RoutingV1(
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun setBadges(id: Long) {
+        when {
+            ideaService.isGetPromoter(id) && !userService.isPromoter(id) -> userService.setPromoter(id, true)
+            !ideaService.isGetPromoter(id) && userService.isPromoter(id) -> userService.setPromoter(id, false)
+        }
+        when {
+            ideaService.isGetHater(id) && !userService.isHater(id) -> userService.setHater(id, true)
+            !ideaService.isGetHater(id) && userService.isHater(id) -> userService.setHater(id, false)
         }
     }
 }

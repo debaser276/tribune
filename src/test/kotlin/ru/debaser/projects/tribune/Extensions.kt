@@ -37,6 +37,20 @@ fun TestApplicationEngine.idea(authorId: String, token: String) {
     handleRequest(HttpMethod.Post, "/api/v1/ideas") {
         addHeader(HttpHeaders.Authorization, "Bearer $token")
         addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-        setBody("""{"authorId": $authorId,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
+        setBody("""{"authorId": $authorId,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg","link":""}""")
+    }
+}
+
+fun TestApplicationEngine.like(token: String, idea: Int) {
+    handleRequest(HttpMethod.Put, "/api/v1/ideas/$idea/like") {
+        addHeader(HttpHeaders.Authorization, "Bearer $token")
+        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
+    }
+}
+
+fun TestApplicationEngine.dislike(token: String, idea: Int) {
+    handleRequest(HttpMethod.Put, "/api/v1/ideas/$idea/dislike") {
+        addHeader(HttpHeaders.Authorization, "Bearer $token")
+        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
     }
 }
