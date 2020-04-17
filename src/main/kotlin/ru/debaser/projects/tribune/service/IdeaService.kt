@@ -14,7 +14,8 @@ class IdeaService (
     private val ideaRepo: IdeaRepository,
     private val voteRepo: VoteRepository,
     private val readerDislikes: Int,
-    private val resultSize: Int
+    private val resultSize: Int,
+    private val topBadge: Int
 ) {
 
     private val mutex = Mutex()
@@ -70,4 +71,18 @@ class IdeaService (
 
     suspend fun getAfterVotes(ideaId: Long, voteId: Long): List<VoteResponseDto> =
         voteRepo.getAfter(ideaId, voteId).take(resultSize).toList()
+
+    suspend fun isPromoter(authorId: Long): Boolean {
+        val likes = voteRepo.getAuthorVotesCount(authorId, true)
+        val dislikes = voteRepo.getAuthorVotesCount(authorId, false)
+        val topPromoters = voteRepo.getTop(topBadge, true)
+        return topPromoters.contains(authorId) || likes > dislikes * 2 || likes > 100
+    }
+
+    suspend fun isHater(authorId: Long): Boolean {
+        val likes = voteRepo.getAuthorVotesCount(authorId, true)
+        val dislikes = voteRepo.getAuthorVotesCount(authorId, false)
+        val topHaters = voteRepo.getTop(topBadge, false)
+        return topHaters.contains(authorId) || dislikes > likes * 2 || dislikes > 100
+    }
 }

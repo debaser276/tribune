@@ -80,7 +80,12 @@ class RoutingV1(
                             val response = ideaService.like(id, me!!.id)
                             val authorId = ideaService.getById(id).authorId
                             if (!ideaService.isReaderEnough(id) && userService.isReader(authorId)) {
-                                userService.reader(authorId, false)
+                                userService.setReader(authorId, false)
+                            }
+                            if (ideaService.isPromoter(authorId)) {
+                                userService.setPromoter(authorId, true)
+                            } else {
+                                userService.setPromoter(authorId, false)
                             }
                             call.respond(response)
                         }
@@ -88,7 +93,12 @@ class RoutingV1(
                             val response = ideaService.dislike(id, me!!.id)
                             val authorId = ideaService.getById(id).authorId
                             if (ideaService.isReaderEnough(id) && !userService.isReader(authorId)) {
-                                userService.reader(authorId, true)
+                                userService.setReader(authorId, true)
+                            }
+                            if (ideaService.isHater(authorId)) {
+                                userService.setHater(authorId, true)
+                            } else {
+                                userService.setHater(authorId, false)
                             }
                             call.respond(response)
                         }

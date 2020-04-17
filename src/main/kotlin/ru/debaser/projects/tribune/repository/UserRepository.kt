@@ -9,8 +9,10 @@ interface UserRepository {
     suspend fun save(user: UserModel): Long?
     suspend fun getById(id: Long): UserModel?
     suspend fun getByUsername(username: String): UserModel?
-    suspend fun reader(id: Long, set: Boolean)
+    suspend fun setReader(id: Long, set: Boolean)
     suspend fun isReader(id: Long): Boolean
+    suspend fun setHater(id: Long, set: Boolean)
+    suspend fun setPromoter(id: Long, set: Boolean)
     suspend fun addAvatar(id: Long, avatar: String)
 }
 
@@ -34,7 +36,7 @@ class UserRepositoryDb: UserRepository {
         Users.select { Users.username eq username }.map { toUserModel(it) }.singleOrNull()
     }
 
-    override suspend fun reader(id: Long, set: Boolean) {
+    override suspend fun setReader(id: Long, set: Boolean) {
         dbQuery {
             Users.update({ Users.id eq id }) {
                 it[isReader] = set
@@ -46,8 +48,24 @@ class UserRepositoryDb: UserRepository {
         Users.select { Users.id eq id }.map { toUserModel(it) }.single().isReader
     }
 
-    override suspend fun addAvatar(id: Long, imageId: String) {
-        dbQuery { Users.update({ Users.id eq id }) { it[avatar] = imageId } }
+    override suspend fun setHater(id: Long, set: Boolean) {
+        dbQuery {
+            Users.update({ Users.id eq id }) {
+                it[isHater] = set
+            }
+        }
+    }
+
+    override suspend fun setPromoter(id: Long, set: Boolean) {
+        dbQuery {
+            Users.update({ Users.id eq id }) {
+                it[isPromoter] = set
+            }
+        }
+    }
+
+    override suspend fun addAvatar(id: Long, avatar: String) {
+        dbQuery { Users.update({ Users.id eq id }) { it[this.avatar] = avatar } }
     }
 
     private fun toUserModel(row: ResultRow): UserModel =

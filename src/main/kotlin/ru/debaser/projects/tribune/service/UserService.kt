@@ -41,9 +41,13 @@ class UserService (
         return AuthenticationResponseDto.fromModel(model, token)
     }
 
-    suspend fun reader(id: Long, set: Boolean) = repo.reader(id, set)
+    suspend fun setReader(id: Long, set: Boolean) = repo.setReader(id, set)
 
     suspend fun isReader(id: Long) = repo.isReader(id)
+
+    suspend fun setHater(id: Long, set: Boolean) = repo.setHater(id, set)
+
+    suspend fun setPromoter(id: Long, set: Boolean) = repo.setPromoter(id, set)
 
     suspend fun addAvatar(id: Long, imageId: String) = repo.addAvatar(id, imageId)
 }

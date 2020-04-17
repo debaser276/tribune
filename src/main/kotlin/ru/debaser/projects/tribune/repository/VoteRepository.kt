@@ -12,6 +12,8 @@ interface VoteRepository {
     suspend fun getDislikesCount(ideaId: Long): Int
     suspend fun getAll(ideaId: Long): List<VoteResponseDto>
     suspend fun getAfter(ideaId: Long, id: Long): List<VoteResponseDto>
+    suspend fun getAuthorVotesCount(authorId: Long, isUp: Boolean): Int
+    suspend fun getTop(num: Int, isUp: Boolean): List<Long>
 }
 
 class VoteRepositoryDb: VoteRepository {
@@ -42,6 +44,14 @@ class VoteRepositoryDb: VoteRepository {
         (Votes innerJoin Users).select { (Votes.ideaId eq ideaId) and (Votes.id greater id) }
             .orderBy(Votes.created to SortOrder.DESC)
             .map { toVoteResponseDto(it) }
+    }
+
+    override suspend fun getAuthorVotesCount(authorId: Long, isUp: Boolean): Int = dbQuery {
+        Votes.select { (Votes.authorId eq authorId) and (Votes.isUp eq isUp) }.count()
+    }
+
+    override suspend fun getTop(num: Int, isUp: Boolean): List<Long> = dbQuery {
+        Votes.slice(Votes.authorId).select { Votes.isUp eq isUp }.groupBy(Votes.authorId).orderBy(Votes.authorId.count()).limit(num).map { it[Votes.authorId] }
     }
 
     private fun toVoteResponseDto(row: ResultRow): VoteResponseDto =

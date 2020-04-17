@@ -45,6 +45,9 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             constant(tag = "api-secret") with (
                     environment.config.propertyOrNull("tribune.cloudinary.api-secret")?.getString() ?:
                     throw ConfigurationException("Api-secret is not specified"))
+            constant(tag = "top-badge") with (
+                    environment.config.propertyOrNull("tribune.settings.top-badge")?.getString()?.toInt() ?:
+                    throw ConfigurationException("Top-badge is not specified"))
             bind<FileService>() with eagerSingleton {
                 FileService(
                     instance(tag = "upload-dir"),
@@ -75,7 +78,8 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     instance(),
                     instance(),
                     instance(tag = "reader-dislikes"),
-                    instance(tag = "result-size")
+                    instance(tag = "result-size"),
+                    instance(tag = "top-badge")
                 )
             }
         }

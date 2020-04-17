@@ -24,19 +24,19 @@ fun TestApplicationEngine.vote(ideaId: String, vote: String, token: String) {
     }
 }
 
-//fun TestApplicationEngine.authToken(username: String): String {
-//    with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
-//        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-//        setBody("""{"username": "$username","password": "Password"}""")
-//    }) {
-//        return JsonPath.read<String>(response.content!!, "$.token")
-//    }
-//}
+fun TestApplicationEngine.authToken(username: String): String {
+    with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
+        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
+        setBody("""{"username": "$username","password": "Password"}""")
+    }) {
+        return JsonPath.read<String>(response.content!!, "$.token")
+    }
+}
 
-//fun TestApplicationEngine.idea(authorId: String, token: String) {
-//    handleRequest(HttpMethod.Post, "/api/v1/ideas") {
-//        addHeader(HttpHeaders.Authorization, "Bearer $token")
-//        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
-//        setBody("""{"authorId": $authorId,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
-//    }
-//}
+fun TestApplicationEngine.idea(authorId: String, token: String) {
+    handleRequest(HttpMethod.Post, "/api/v1/ideas") {
+        addHeader(HttpHeaders.Authorization, "Bearer $token")
+        addHeader(HttpHeaders.ContentType, jsonContentType.toString())
+        setBody("""{"authorId": $authorId,"content": "New Idea","media": "{d9e0e38e-ef6f-4e62-9191-e97bad6be0b8.jpg"}""")
+    }
+}
