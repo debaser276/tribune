@@ -29,7 +29,7 @@ class UserService (
             password = passwordEncoder.encode(input.password)
         )) ?: throw DatabaseException()
         val token = tokenService.generate(id)
-        return AuthenticationResponseDto(id, token)
+        return AuthenticationResponseDto(id, input.username, token)
     }
 
     suspend fun authenticate(input: AuthenticationRequestDto): AuthenticationResponseDto {
