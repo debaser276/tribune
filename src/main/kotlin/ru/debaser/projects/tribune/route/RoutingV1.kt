@@ -101,7 +101,9 @@ class RoutingV1(
                             }
                             setBadges(me!!.id)
                             val pushToken = userService.getPushToken(response.authorId)
-                            fcmService.sendVote(me!!.username, pushToken, response.content, true)
+                            if (pushToken != null) {
+                                fcmService.sendVote(me!!.username, pushToken, response.content, true)
+                            }
                             call.respond(response)
                         }
                         put("/{id}/dislike") {
@@ -112,7 +114,9 @@ class RoutingV1(
                             }
                             setBadges(me!!.id)
                             val pushToken = userService.getPushToken(response.authorId)
-                            fcmService.sendVote(me!!.username, pushToken, response.content, false)
+                            if (pushToken != null) {
+                                fcmService.sendVote(me!!.username, pushToken, response.content, true)
+                            }
                             call.respond(response)
                         }
                         get("/recent") {
