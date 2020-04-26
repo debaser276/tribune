@@ -16,9 +16,12 @@ interface UserRepository {
     suspend fun isHater(id: Long): Boolean
     suspend fun setHater(id: Long, set: Boolean)
     suspend fun addAvatar(id: Long, avatar: String)
+    suspend fun savePushToken(id: Long, token: String)
+    suspend fun remPushToken(id: Long): String?
 }
 
 class UserRepositoryDb: UserRepository {
+    private val pushTokenWithUserIdMap = mutableMapOf<Long, String>()
 
     override suspend fun save(user: UserModel): Long? = dbQuery {
         Users.insert {
@@ -73,4 +76,10 @@ class UserRepositoryDb: UserRepository {
             isReader = row[Users.isReader],
             avatar = row[Users.avatar]
         )
+
+    override suspend fun savePushToken(id: Long, token: String) {
+        pushTokenWithUserIdMap[id] = token
+    }
+
+    override suspend fun remPushToken(id: Long) = pushTokenWithUserIdMap.remove(id)
 }

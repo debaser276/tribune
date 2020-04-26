@@ -54,4 +54,8 @@ class UserService (
     suspend fun setHater(id: Long, set: Boolean) = repo.setHater(id, set)
 
     suspend fun addAvatar(id: Long, imageId: String) = repo.addAvatar(id, imageId)
+
+    suspend fun savePushToken(id: Long, token: String) = repo.savePushToken(id, token)
+
+    suspend fun remPushToken(id: Long) = repo.remPushToken(id)
 }

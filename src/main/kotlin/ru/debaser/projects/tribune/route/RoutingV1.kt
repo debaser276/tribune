@@ -1,10 +1,12 @@
 package ru.debaser.projects.tribune.route
 
+import com.google.api.Http
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
 import io.ktor.auth.authentication
 import io.ktor.features.ParameterConversionException
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.request.receive
@@ -15,6 +17,8 @@ import io.ktor.util.pipeline.PipelineContext
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
+import ru.debaser.projects.tribune.dto.PushRequestDto
+import ru.debaser.projects.tribune.exception.UserNotFoundException
 import ru.debaser.projects.tribune.model.MediaModel
 import ru.debaser.projects.tribune.model.UserModel
 import ru.debaser.projects.tribune.service.FileService
@@ -68,6 +72,17 @@ class RoutingV1(
                         post {
                             val image = call.receive<MediaModel>()
                             userService.addAvatar(me!!.id, image.id)
+                        }
+                    }
+                    route("/push") {
+                        post {
+                            val input = call.receive<PushRequestDto>()
+                            userService.savePushToken(me!!.id, input.pushToken)
+                            call.respond(PushRequestDto(input.pushToken))
+                        }
+                        patch("/remove") {
+                            userService.remPushToken(me!!.id) ?: throw UserNotFoundException()
+                            call.respond(HttpStatusCode.OK)
                         }
                     }
                     route("/ideas") {
