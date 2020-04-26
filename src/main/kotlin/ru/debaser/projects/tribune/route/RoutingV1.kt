@@ -111,6 +111,8 @@ class RoutingV1(
                                 userService.setReader(authorId, true)
                             }
                             setBadges(me!!.id)
+                            val pushToken = userService.getPushToken(response.authorId)
+                            fcmService.sendVote(me!!.username, pushToken, response.content, false)
                             call.respond(response)
                         }
                         get("/recent") {
