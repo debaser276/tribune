@@ -58,4 +58,6 @@ class UserService (
     suspend fun savePushToken(id: Long, token: String) = repo.savePushToken(id, token)
 
     suspend fun remPushToken(id: Long) = repo.remPushToken(id)
+
+    suspend fun getPushToken(id: Long) = repo.getPushToken(id) ?: throw UserNotFoundException()
 }

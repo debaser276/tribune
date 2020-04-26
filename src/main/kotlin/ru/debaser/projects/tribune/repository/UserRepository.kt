@@ -18,6 +18,7 @@ interface UserRepository {
     suspend fun addAvatar(id: Long, avatar: String)
     suspend fun savePushToken(id: Long, token: String)
     suspend fun remPushToken(id: Long): String?
+    suspend fun getPushToken(id: Long): String?
 }
 
 class UserRepositoryDb: UserRepository {
@@ -81,5 +82,9 @@ class UserRepositoryDb: UserRepository {
         pushTokenWithUserIdMap[id] = token
     }
 
-    override suspend fun remPushToken(id: Long) = pushTokenWithUserIdMap.remove(id)
+    override suspend fun remPushToken(id: Long) =
+        pushTokenWithUserIdMap.remove(id)
+
+    override suspend fun getPushToken(id: Long): String? =
+        pushTokenWithUserIdMap[id]
 }

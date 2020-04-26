@@ -21,6 +21,7 @@ import ru.debaser.projects.tribune.dto.PushRequestDto
 import ru.debaser.projects.tribune.exception.UserNotFoundException
 import ru.debaser.projects.tribune.model.MediaModel
 import ru.debaser.projects.tribune.model.UserModel
+import ru.debaser.projects.tribune.service.FCMService
 import ru.debaser.projects.tribune.service.FileService
 import ru.debaser.projects.tribune.service.IdeaService
 import ru.debaser.projects.tribune.service.UserService
@@ -41,7 +42,8 @@ class RoutingV1(
     private val staticPath: String,
     private val userService: UserService,
     private val fileService: FileService,
-    private val ideaService: IdeaService
+    private val ideaService: IdeaService,
+    private val fcmService: FCMService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -98,6 +100,8 @@ class RoutingV1(
                                 userService.setReader(authorId, false)
                             }
                             setBadges(me!!.id)
+                            val pushToken = userService.getPushToken(response.authorId)
+                            fcmService.sendVote(me!!.username, pushToken, response.content, true)
                             call.respond(response)
                         }
                         put("/{id}/dislike") {

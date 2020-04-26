@@ -70,6 +70,7 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     instance(tag = "upload-dir"),
                     instance(),
                     instance(),
+                    instance(),
                     instance()
                 ) }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
