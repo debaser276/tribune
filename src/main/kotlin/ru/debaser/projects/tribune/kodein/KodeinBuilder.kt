@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import ru.debaser.projects.tribune.db.DatabaseFactory
 import ru.debaser.projects.tribune.repository.*
 import ru.debaser.projects.tribune.route.RoutingV1
-import ru.debaser.projects.tribune.service.FileService
-import ru.debaser.projects.tribune.service.IdeaService
-import ru.debaser.projects.tribune.service.JWTTokenService
-import ru.debaser.projects.tribune.service.UserService
+import ru.debaser.projects.tribune.service.*
 import javax.naming.ConfigurationException
 
 class KodeinBuilder(private val environment: ApplicationEnvironment) {
@@ -48,6 +45,18 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             constant(tag = "top-badge") with (
                     environment.config.propertyOrNull("tribune.settings.top-badge")?.getString()?.toInt() ?:
                     throw ConfigurationException("Top-badge is not specified"))
+            constant(tag = "fcm-password") with (
+                    environment.config.propertyOrNull("tribune.fcm.password")?.getString() ?:
+                    throw ConfigurationException("Fcm-password is not specified"))
+            constant(tag = "fcm-salt") with (
+                    environment.config.propertyOrNull("tribune.fcm.salt")?.getString() ?:
+                    throw ConfigurationException("Fcm-salt is not specified"))
+            constant(tag = "fcm-dbUrl") with (
+                    environment.config.propertyOrNull("tribune.fcm.dbUrl")?.getString() ?:
+                    throw ConfigurationException("Fcm-dbUrl is not specified"))
+            constant(tag = "fcm-path") with (
+                    environment.config.propertyOrNull("tribune.fcm.path")?.getString() ?:
+                    throw ConfigurationException("Fcm-path is not specified"))
             bind<FileService>() with eagerSingleton {
                 FileService(
                     instance(tag = "upload-dir"),
@@ -80,6 +89,14 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     instance(tag = "reader-dislikes"),
                     instance(tag = "result-size"),
                     instance(tag = "top-badge")
+                )
+            }
+            bind<FCMService>() with eagerSingleton {
+                FCMService(
+                    instance(tag = "fcm-dbUrl"),
+                    instance(tag = "fcm-password"),
+                    instance(tag = "fcm-salt"),
+                    instance(tag = "fcm-path")
                 )
             }
         }

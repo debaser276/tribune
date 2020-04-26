@@ -40,5 +40,7 @@ out/
 *.tar.gz
 *.rar
 
-secrets/
+/fcm/fcm-raw.json
+/fcm/encrypt.properties
+
 
