@@ -71,7 +71,8 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     instance(),
                     instance(),
                     instance(),
-                    instance()
+                    instance(),
+                    environment.log
                 ) }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryDb() }

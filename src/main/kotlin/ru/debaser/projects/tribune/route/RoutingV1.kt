@@ -14,6 +14,7 @@ import io.ktor.request.receiveMultipart
 import io.ktor.response.respond
 import io.ktor.routing.*
 import io.ktor.util.pipeline.PipelineContext
+import org.slf4j.Logger
 import ru.debaser.projects.tribune.exception.LoginAlreadyExistsException
 import ru.debaser.projects.tribune.dto.AuthenticationRequestDto
 import ru.debaser.projects.tribune.dto.IdeaRequestDto
@@ -43,7 +44,8 @@ class RoutingV1(
     private val userService: UserService,
     private val fileService: FileService,
     private val ideaService: IdeaService,
-    private val fcmService: FCMService
+    private val fcmService: FCMService,
+    private val log: Logger
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -79,6 +81,7 @@ class RoutingV1(
                     route("/push") {
                         post {
                             val input = call.receive<PushRequestDto>()
+                            log.info("Push token: ${input.pushToken}")
                             userService.savePushToken(me!!.id, input.pushToken)
                             call.respond(PushRequestDto(input.pushToken))
                         }
