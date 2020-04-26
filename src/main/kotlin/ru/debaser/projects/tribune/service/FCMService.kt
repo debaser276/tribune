@@ -35,7 +35,7 @@ class FCMService(
             val message = Message.builder()
                 .putData("type", "vote")
                 .putData("title", "Vote")
-                .putData("content", "$userLiked ${if (isUp) "likes" else "dislikes"} $ideaContent")
+                .putData("content", "$userLiked ${if (isUp) "liked" else "disliked"} $ideaContent")
                 .setToken(recipient)
                 .build()
             FirebaseMessaging.getInstance().send(message)
