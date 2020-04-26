@@ -30,7 +30,7 @@ class FCMService(
         FirebaseApp.initializeApp(options)
     }
 
-    suspend fun sendVote(userLiked: String, recipient: String, ideaContent: String, isUp: Boolean) {
+    fun sendVote(userLiked: String, recipient: String, ideaContent: String, isUp: Boolean) {
         try {
             val message = Message.builder()
                 .putData("type", "vote")

@@ -118,7 +118,7 @@ class RoutingV1(
                             setBadges(me!!.id)
                             val pushToken = userService.getPushToken(response.authorId)
                             if (pushToken != null) {
-                                fcmService.sendVote(me!!.username, pushToken, response.content, true)
+                                fcmService.sendVote(me!!.username, pushToken, response.content, false)
                             }
                             call.respond(response)
                         }
