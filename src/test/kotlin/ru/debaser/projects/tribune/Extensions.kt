@@ -14,7 +14,7 @@ fun TestApplicationEngine.regToken(username: String): String {
         addHeader(HttpHeaders.ContentType, jsonContentType.toString())
         setBody("""{"username": "$username","password": "Password"}""")
     }) {
-        return JsonPath.read<String>(response.content!!, "$.token")
+        return JsonPath.read(response.content!!, "$.token")
     }
 }
 
@@ -29,7 +29,7 @@ fun TestApplicationEngine.authToken(username: String): String {
         addHeader(HttpHeaders.ContentType, jsonContentType.toString())
         setBody("""{"username": "$username","password": "Password"}""")
     }) {
-        return JsonPath.read<String>(response.content!!, "$.token")
+        return JsonPath.read(response.content!!, "$.token")
     }
 }
 

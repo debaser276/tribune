@@ -27,7 +27,7 @@ class BadgeTest {
                 for (i in 1..6) like(tokens[2], i)
                 for (i in 1..4) like(tokens[3], i)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
-                    addHeader(HttpHeaders.ContentType, ru.debaser.projects.tribune.jsonContentType.toString())
+                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user4","password": "Password"}""")
                 }) {
                     val isPromoter = JsonPath.read<Boolean>(response.content, "$.isPromoter")
@@ -44,7 +44,7 @@ class BadgeTest {
                 val token = authToken("user4")
                 for (i in 5..7) dislike(token, i)
                 with(handleRequest(HttpMethod.Post, "/api/v1/authentication") {
-                    addHeader(HttpHeaders.ContentType, ru.debaser.projects.tribune.jsonContentType.toString())
+                    addHeader(HttpHeaders.ContentType, jsonContentType.toString())
                     setBody("""{"username": "user4","password": "Password"}""")
                 }) {
                     val isPromoter = JsonPath.read<Boolean>(response.content, "$.isPromoter")

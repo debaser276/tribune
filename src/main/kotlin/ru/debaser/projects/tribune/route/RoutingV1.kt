@@ -1,6 +1,5 @@
 package ru.debaser.projects.tribune.route
 
-import com.google.api.Http
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.auth.authenticate
