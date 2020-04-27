@@ -48,6 +48,11 @@ class RoutingV1(
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
+            route("/nosleep") {
+                get {
+                    call.respond("I'm not sleeping")
+                }
+            }
             route("/api/v1") {
                 static("/static") {
                     files(staticPath)
