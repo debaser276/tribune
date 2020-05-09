@@ -15,26 +15,17 @@ import ru.debaser.projects.tribune.model.MediaModel
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
-import kotlin.collections.HashMap
 
 class FileService(
     private val uploadPath: String,
-    cloudName: String,
-    apiKey: String,
-    apiSecret: String
+    private val cloudinary: Cloudinary
 ) {
     private val images = listOf(ContentType.Image.JPEG, ContentType.Image.PNG)
-    private val cloudinary: Cloudinary
 
     init {
         if (Files.notExists(Paths.get(uploadPath))) {
             Files.createDirectory(Paths.get(uploadPath))
         }
-        val config = HashMap<String, String>()
-        config["cloud_name"] = cloudName
-        config["api_key"] = apiKey
-        config["api_secret"] = apiSecret
-        cloudinary = Cloudinary(config)
     }
 
     suspend fun save(multipart: MultiPartData): MediaModel {

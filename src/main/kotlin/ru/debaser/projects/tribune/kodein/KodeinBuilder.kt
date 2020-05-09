@@ -1,5 +1,6 @@
 package ru.debaser.projects.tribune.kodein
 
+import com.cloudinary.Cloudinary
 import io.ktor.application.ApplicationEnvironment
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -57,12 +58,17 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             constant(tag = "fcm-path") with (
                     environment.config.propertyOrNull("tribune.fcm.path")?.getString() ?:
                     throw ConfigurationException("Fcm-path is not specified"))
+            bind<Cloudinary>() with eagerSingleton {
+                val config = HashMap<String, String>()
+                config["cloud_name"] = instance(tag = "cloud-name")
+                config["api_key"] = instance(tag = "api-key")
+                config["api_secret"] = instance(tag = "api-secret")
+                Cloudinary(config)
+            }
             bind<FileService>() with eagerSingleton {
                 FileService(
                     instance(tag = "upload-dir"),
-                    instance(tag = "cloud-name"),
-                    instance(tag = "api-key"),
-                    instance(tag = "api-secret")
+                    instance()
                 ) }
             bind<DatabaseFactory>() with eagerSingleton { DatabaseFactory(instance(tag = "jdbc-url")).apply { init() } }
             bind<RoutingV1>() with eagerSingleton {
