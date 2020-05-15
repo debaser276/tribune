@@ -43,8 +43,7 @@ class RoutingV1(
     private val userService: UserService,
     private val fileService: FileService,
     private val ideaService: IdeaService,
-    private val fcmService: FCMService,
-    private val log: Logger
+    private val fcmService: FCMService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -85,7 +84,6 @@ class RoutingV1(
                     route("/push") {
                         post {
                             val input = call.receive<PushRequestDto>()
-                            log.info("Push token: ${input.pushToken}")
                             userService.savePushToken(me!!.id, input.pushToken)
                             call.respond(PushRequestDto(input.pushToken))
                         }
